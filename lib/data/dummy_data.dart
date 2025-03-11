@@ -1,4 +1,8 @@
-[
+// ignore_for_file: non_constant_identifier_names
+
+import '../models/product.dart';
+
+final DUMMY_PRODUCTS = [
     Product(
       id: 'p1',
       title: 'Red Shirt',
@@ -31,4 +35,4 @@
       imageUrl:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     ),
-  ]
+  ];
