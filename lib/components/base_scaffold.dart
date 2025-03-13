@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 class BaseScaffold extends StatelessWidget {
-  const BaseScaffold({super.key, required this.title, required this.body});
+  const BaseScaffold(
+      {super.key, required this.title, required this.body, this.action});
 
   final String title;
+  final List<Widget>? action;
   final Widget body;
 
   @override
@@ -14,6 +16,7 @@ class BaseScaffold extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Theme.of(context).colorScheme.onSecondary,
+        actions: action,
       ),
       body: body,
     );
