@@ -23,8 +23,8 @@ class ProductGrid extends StatelessWidget {
       ),
       //cria um provider para cada produto e cria a instancia de ProductItem que vai utilizar os dados desse produto ouvindo as alterações
       itemBuilder: (ctx, i) {
-        return ChangeNotifierProvider(
-          create: (ctx) => loadedProducts[i],
+        return ChangeNotifierProvider.value(
+          value: loadedProducts[i],
           child: const ProductItem(),
         );
       },
