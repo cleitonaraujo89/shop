@@ -1,6 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
-import '../models/product.dart';
+import '../providers/product.dart';
 
 final DUMMY_PRODUCTS = [
   Product(
