@@ -9,8 +9,7 @@ class ProductGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-     final List<Product> loadedProducts =
+    final List<Product> loadedProducts =
         Provider.of<ProductsProvider>(context).items;
 
     return GridView.builder(
@@ -22,8 +21,12 @@ class ProductGrid extends StatelessWidget {
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
       ),
+      //cria um provider para cada produto e cria a instancia de ProductItem que vai utilizar os dados desse produto ouvindo as alterações
       itemBuilder: (ctx, i) {
-        return ProductItem(product: loadedProducts[i]);
+        return ChangeNotifierProvider(
+          create: (ctx) => loadedProducts[i],
+          child: const ProductItem(),
+        );
       },
     );
   }
