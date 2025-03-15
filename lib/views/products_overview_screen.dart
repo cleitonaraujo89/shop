@@ -52,12 +52,14 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         ),
         //usando alias para evitar erro de importação
         Consumer<Cart>(
-          builder: (_, cart, child) => cart_badge.Badge(
-            value: cart.itemCount.toString(),
-            child: IconButton(
+          child: IconButton(
               onPressed: () {},
               icon: Icon(Icons.shopping_cart),
             ),
+
+          builder: (_, cart, child) => cart_badge.Badge(
+            value: cart.itemCount.toString(),
+            child: child!,
           ),
         ),
       ],
