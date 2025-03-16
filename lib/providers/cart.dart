@@ -42,7 +42,7 @@ class Cart with ChangeNotifier {
       });
     } else {
       _items.putIfAbsent(
-        product.id,
+        product.id, //define a chave e abaixo o valor (objeto) <String, CartItem>
         () => CartItem(
           id: Random().nextDouble().toString(),
           title: product.title,
@@ -53,5 +53,12 @@ class Cart with ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  //retorna o valor dos produtos no carrinho
+  double get totalAmout {    
+    return _items.values.fold(0.0, (total, cartItem) {
+      return  total + (cartItem.price * cartItem.quantity);      
+    });
   }
 }

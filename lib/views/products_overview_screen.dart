@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop/utils/app_routes.dart';
 import '../components/base_scaffold.dart';
 import '../components/product_grid.dart';
 //import '../providers/products_provider.dart';
@@ -53,10 +54,9 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         //usando alias para evitar erro de importação
         Consumer<Cart>(
           child: IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.shopping_cart),
-            ),
-
+            onPressed: () => Navigator.of(context).pushNamed(AppRoutes.CART),
+            icon: Icon(Icons.shopping_cart),
+          ),
           builder: (_, cart, child) => cart_badge.Badge(
             value: cart.itemCount.toString(),
             child: child!,
