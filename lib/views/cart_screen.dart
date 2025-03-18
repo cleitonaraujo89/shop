@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop/components/base_scaffold.dart';
-import 'package:shop/components/widget_cart_Item.dart';
+import 'package:shop/components/widget_cart_item.dart';
 import '../providers/cart.dart';
 
 class CartScreen extends StatelessWidget {
@@ -11,9 +11,10 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     final Cart cart = Provider.of(context);
     final cartItem = cart.items.values.toList();
-
+   
     return BaseScaffold(
       title: 'Carrinho',
       body: Column(
