@@ -77,4 +77,9 @@ class Cart with ChangeNotifier {
 
     return double.parse(total.toStringAsFixed(2)); //limita a 2 casas decimais
   }
+
+  void clear(){
+    _items.clear();
+    notifyListeners();
+  }
 }
