@@ -5,16 +5,16 @@ import 'package:provider/provider.dart';
 import 'package:shop/components/base_scaffold.dart';
 import 'package:shop/components/widget_cart_item.dart';
 import '../providers/cart.dart';
+import '../providers/orders.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-
     final Cart cart = Provider.of(context);
-    final cartItem = cart.items.values.toList();
-   
+    final cartItems = cart.items.values.toList();
+
     return BaseScaffold(
       title: 'Carrinho',
       body: Column(
@@ -58,7 +58,11 @@ class CartScreen extends StatelessWidget {
                   ),
                   Spacer(), //cria um espaço entre os elementos
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Provider.of<Orders>(context, listen: false)
+                          .addOrder(cart);
+                      cart.clear();
+                    },
                     child: Text('COMPRAR'),
                   )
                 ],
@@ -68,8 +72,8 @@ class CartScreen extends StatelessWidget {
           SizedBox(height: 10),
           Expanded(
             child: ListView.builder(
-                itemCount: cartItem.length,
-                itemBuilder: (ctx, i) => WidgetCartItem(cartItem[i])),
+                itemCount: cartItems.length,
+                itemBuilder: (ctx, i) => WidgetCartItem(cartItems[i])),
           )
         ],
       ),
