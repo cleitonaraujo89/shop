@@ -19,8 +19,12 @@ class Order {
 class Orders with ChangeNotifier {
   final List<Order> _orders = [];
 
-  List<Order> get orders {
+  List<Order> get getOrders {
     return [..._orders];
+  }
+
+  int get ordersCount {
+    return _orders.length;
   }
 
   void addOrder(Cart cart) {

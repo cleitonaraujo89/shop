@@ -18,7 +18,11 @@ class AppDrawer extends StatelessWidget {
           ),
           // Divider(),
           ListTile(
-            leading: const Icon(Icons.shop),
+            leading: const Icon(
+              Icons.shopping_basket_outlined,
+              size: 30,
+              color: Colors.blue,
+            ),
             title: const Text('Loja'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed(AppRoutes.HOME);
@@ -26,7 +30,10 @@ class AppDrawer extends StatelessWidget {
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.payment),
+            leading: const Icon(
+              Icons.payment,
+              color: Colors.blueAccent,
+            ),
             title: const Text('Pedidos'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed(AppRoutes.ORDERS);
