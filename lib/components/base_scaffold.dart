@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 
 class BaseScaffold extends StatelessWidget {
   const BaseScaffold(
-      {super.key, required this.title, required this.body, this.action});
+      {super.key,
+      required this.title,
+      required this.body,
+      this.action,
+      this.drawer});
 
   final String title;
-  final List<Widget>? action;
   final Widget body;
+  final List<Widget>? action;
+  final Widget? drawer;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +24,7 @@ class BaseScaffold extends StatelessWidget {
         actions: action,
       ),
       body: body,
+      drawer: drawer,
     );
   }
 }

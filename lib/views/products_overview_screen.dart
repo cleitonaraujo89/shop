@@ -8,6 +8,7 @@ import '../components/product_grid.dart';
 //import '../providers/products_provider.dart';
 import '../providers/cart.dart';
 import '../components/badge.dart' as cart_badge;
+import '../components/app_drawer.dart';
 
 enum FilterOptions { favorite, all }
 
@@ -63,9 +64,8 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           ),
         ),
       ],
-      body: ProductGrid(
-        showFavoriteOnly: _showFavoriteOnly,
-      ),
+      body: ProductGrid(showFavoriteOnly: _showFavoriteOnly),
+      drawer: AppDrawer(),
     );
   }
 }
