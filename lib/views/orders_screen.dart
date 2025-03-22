@@ -13,7 +13,7 @@ class OrdersScreen extends StatelessWidget {
     final Orders orders = Provider.of<Orders>(context);
     return BaseScaffold(
       title: 'Meus Pedidos',
-      drawer: AppDrawer(),
+      drawer: const AppDrawer(),
       body: ListView.builder(
         itemCount: orders.ordersCount,
         itemBuilder: (ctx, i) => OrderWidget(order: orders.getOrders[i]),

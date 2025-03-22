@@ -16,7 +16,7 @@ class _OrderWidgetState extends State<OrderWidget> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       child: Column(
         children: [
           ListTile(
@@ -38,7 +38,7 @@ class _OrderWidgetState extends State<OrderWidget> {
               children: [
                 Container(
                   height: (widget.order.products.length * 35),
-                  padding: EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                     horizontal: 15,
                     vertical: 4,
                   ),
@@ -49,14 +49,14 @@ class _OrderWidgetState extends State<OrderWidget> {
                         children: [
                           Text(
                             product.title,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
                             '${product.quantity}x R\$ ${product.price}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 18,
                               color: Colors.grey,
                             ),
@@ -66,18 +66,18 @@ class _OrderWidgetState extends State<OrderWidget> {
                     }).toList(),
                   ),
                 ),
-                Divider(
+                const Divider(
                   thickness: 2,
                   indent: 25,
                   endIndent: 25,
                   color: Colors.black,
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         'Total',
                         style: TextStyle(
                           fontSize: 18,
@@ -86,7 +86,7 @@ class _OrderWidgetState extends State<OrderWidget> {
                       ),
                       Row(
                         children: [
-                          Text(
+                          const Text(
                             'R\$ ',
                             style: TextStyle(
                               fontSize: 18,
@@ -95,7 +95,7 @@ class _OrderWidgetState extends State<OrderWidget> {
                           ),
                           Text(
                             widget.order.total.toString(),
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: Colors.purple,
