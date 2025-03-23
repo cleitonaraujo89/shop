@@ -56,11 +56,21 @@ class ProductItem extends StatelessWidget {
           ),
           trailing: IconButton(
             onPressed: () {
+              //fecha qualquer SnackBar aberta
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              //depois abre uma SnackBar
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Produto adicionado com sucesso!'),
-                  duration: Duration(seconds: 2),
-                  action: SnackBarAction(label: 'Desfazer', onPressed: () {}),
+                  content: Text(
+                    'Produto adicionado!',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  duration: Duration(seconds: 3),
+                  action: SnackBarAction(
+                      label: 'Desfazer',                      
+                      onPressed: () {
+                        cart.removeSingleItem(product.id);
+                      }),
                 ),
               );
               cart.addItem(product);

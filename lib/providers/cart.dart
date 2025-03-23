@@ -75,10 +75,14 @@ class Cart with ChangeNotifier {
       return;
     }
 
+    //se tiver o produto e só com 1 unidade... remove
     if (_items[productId]!.quantity == 1) {
       _items.remove(productId);
+      print('ta no if');
     } else {
+      //caso contrario atualiza abatendo 1 unidade
       _items.update(productId, (existingItem) {
+        print('ta no else');
         return CartItem(
           id: existingItem.id,
           productId: existingItem.productId,
