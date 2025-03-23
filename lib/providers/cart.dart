@@ -69,6 +69,30 @@ class Cart with ChangeNotifier {
     notifyListeners();
   }
 
+  void removeSingleItem(String productId) {
+    //se nao terver o produto (a chave) retorna
+    if (!_items.containsKey(productId)) {
+      return;
+    }
+
+    if (_items[productId]!.quantity == 1) {
+      _items.remove(productId);
+    } else {
+      _items.update(productId, (existingItem) {
+        return CartItem(
+          id: existingItem.id,
+          productId: existingItem.productId,
+          title: existingItem.title,
+          quantity: existingItem.quantity - 1,
+          price: existingItem.price,
+          imageUrl: existingItem.imageUrl,
+        );
+      });
+    }
+
+    notifyListeners();
+  }
+
   //retorna o valor dos produtos no carrinho
   double get totalAmout {
     double total = _items.values.fold(0.0, (total, cartItem) {
@@ -78,7 +102,7 @@ class Cart with ChangeNotifier {
     return double.parse(total.toStringAsFixed(2)); //limita a 2 casas decimais
   }
 
-  void clear(){
+  void clear() {
     _items.clear();
     notifyListeners();
   }
