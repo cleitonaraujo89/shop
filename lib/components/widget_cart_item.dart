@@ -30,21 +30,21 @@ class WidgetCartItem extends StatelessWidget {
         return showDialog(
             context: context,
             builder: (ctx) => AlertDialog(
-                  title: Text('Tem Certeza?'),
-                  content: Text('Quer remover este item do carrinho?'),
+                  title: const Text('Tem Certeza?'),
+                  content: const Text('Quer remover este item do carrinho?'),
                   actions: [
                     //se o usuário clicar no 'Não' ou fora da caixa o item não é deletado
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).pop(false);
                       },
-                      child: Text('Não'),
+                      child: const Text('Não'),
                     ),
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).pop(true);
                       },
-                      child: Text('Sim'),
+                      child: const Text('Sim'),
                     ),
                   ],
                 ));

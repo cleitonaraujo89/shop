@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop/components/product_item.dart';
+import 'package:shop/components/product_grid_item.dart';
 import 'package:shop/providers/product.dart';
 import 'package:shop/providers/products_provider.dart';
 
@@ -30,7 +30,7 @@ class ProductGrid extends StatelessWidget {
       itemBuilder: (ctx, i) {
         return ChangeNotifierProvider.value(
           value: loadedProducts[i],
-          child: const ProductItem(),
+          child: const ProductGridItem(),
         );
       },
     );
