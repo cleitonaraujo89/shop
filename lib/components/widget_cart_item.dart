@@ -23,9 +23,37 @@ class WidgetCartItem extends StatelessWidget {
           size: 40,
         ),
       ),
+      //Direção para deletar <-
       direction: DismissDirection.endToStart,
-      onDismissed: (_){
-        Provider.of<Cart>(context, listen: false).removeItem(cartItem.productId);
+      //confirmação que deseja deletar
+      confirmDismiss: (_) {
+        return showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+                  title: Text('Tem Certeza?'),
+                  content: Text('Quer remover este item do carrinho?'),
+                  actions: [
+                    //se o usuário clicar no 'Não' ou fora da caixa o item não é deletado
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: Text('Não'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                      },
+                      child: Text('Sim'),
+                    ),
+                  ],
+                ));
+      },
+
+      //quando deletar
+      onDismissed: (_) {
+        Provider.of<Cart>(context, listen: false)
+            .removeItem(cartItem.productId);
       },
       child: Card(
         elevation: 5,

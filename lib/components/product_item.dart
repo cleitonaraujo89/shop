@@ -67,7 +67,7 @@ class ProductItem extends StatelessWidget {
                   ),
                   duration: Duration(seconds: 3),
                   action: SnackBarAction(
-                      label: 'Desfazer',                      
+                      label: 'DESFAZER',
                       onPressed: () {
                         cart.removeSingleItem(product.id);
                       }),
