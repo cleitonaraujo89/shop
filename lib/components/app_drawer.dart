@@ -18,7 +18,7 @@ class AppDrawer extends StatelessWidget {
             centerTitle: true,
           ),
           // Divider(),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           ListTile(
             leading: const Icon(
               Icons.shopping_basket_outlined,

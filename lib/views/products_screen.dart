@@ -1,8 +1,12 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:shop/components/base_scaffold.dart';
 import '../components/app_drawer.dart';
+import '../components/product_item.dart';
+
 import '../providers/products_list.dart';
 
 class ProductsScreen extends StatelessWidget {
@@ -10,10 +14,12 @@ class ProductsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final products = Provider.of<ProductsList>(context);
+    final productsData = Provider.of<ProductsList>(context);
+    final products = productsData.items;
+
     return BaseScaffold(
       title: 'Gerenciar Produtos',
-      drawer: AppDrawer(),
+      drawer: const AppDrawer(),
       action: [
         IconButton(
           onPressed: () {},
@@ -21,10 +27,19 @@ class ProductsScreen extends StatelessWidget {
         )
       ],
       body: Padding(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: ListView.builder(
-          itemCount: products.itensCount,
-          itemBuilder: (ctx, i) => Text('Testando'),
+          itemCount: productsData.itensCount,
+          itemBuilder: (ctx, i) => Column(
+            children: [
+              ProductItem(product: products[i]),
+              Divider(
+                thickness: 3,
+                endIndent: 10,
+                indent: 10,
+              )
+            ],
+          ),
         ),
       ),
     );
