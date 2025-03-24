@@ -2,17 +2,21 @@ import 'package:flutter/material.dart';
 import 'product.dart';
 import '../data/dummy_data.dart';
 
-class ProductsProvider with ChangeNotifier {
+class ProductsList with ChangeNotifier {
   final List<Product> _items = DUMMY_PRODUCTS;
 
   List<Product> get items {
     return [..._items];
   }
 
+  int get itensCount {
+    return _items.length;
+  }
+
   List<Product> get favoriteItems {
     return _items.where((prod) => prod.isFavorite).toList();
   }
-
+  
   //adiciona um produto e notifica os ouvintes
   void addProduct(Product product) {
     _items.add(product);

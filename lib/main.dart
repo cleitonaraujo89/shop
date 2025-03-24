@@ -2,14 +2,18 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop/providers/orders.dart';
+
 import 'utils/app_routes.dart';
+
+import './providers/cart.dart';
+import 'package:shop/providers/orders.dart';
+import 'providers/products_list.dart';
+
 import 'package:shop/views/cart_screen.dart';
 import 'views/products_overview_screen.dart';
 import './views/product_detail_screen.dart';
-import './providers/products_provider.dart';
-import './providers/cart.dart';
 import './views/orders_screen.dart';
+import './views/products_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -19,7 +23,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => ProductsProvider(),
+          create: (_) => ProductsList(),
         ),
         ChangeNotifierProvider(
           create: (_) => Cart(),
@@ -44,6 +48,7 @@ class MyApp extends StatelessWidget {
           AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailScreen(),
           AppRoutes.CART: (ctx) => CartScreen(),
           AppRoutes.ORDERS: (ctx) => OrdersScreen(),
+          AppRoutes.PRODUCTS: (ctx) => ProductsScreen(),
         },
       ),
     );

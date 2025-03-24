@@ -10,6 +10,7 @@ class AppDrawer extends StatelessWidget {
       child: Column(
         children: [
           AppBar(
+            toolbarHeight: 85,
             title: const Text('Bem vindo Usuário'),
             automaticallyImplyLeading: false,
             backgroundColor: Theme.of(context).primaryColor,
@@ -17,6 +18,7 @@ class AppDrawer extends StatelessWidget {
             centerTitle: true,
           ),
           // Divider(),
+          SizedBox(height: 20),
           ListTile(
             leading: const Icon(
               Icons.shopping_basket_outlined,
@@ -28,7 +30,11 @@ class AppDrawer extends StatelessWidget {
               Navigator.of(context).pushReplacementNamed(AppRoutes.HOME);
             },
           ),
-          const Divider(),
+          const Divider(
+            indent: 15,
+            endIndent: 15,
+            color: Colors.purple,
+          ),
           ListTile(
             leading: const Icon(
               Icons.payment,
@@ -36,7 +42,22 @@ class AppDrawer extends StatelessWidget {
             ),
             title: const Text('Pedidos'),
             onTap: () {
-              Navigator.of(context).pushReplacementNamed(AppRoutes.ORDERS);
+              Navigator.of(context).pushNamed(AppRoutes.ORDERS);
+            },
+          ),
+          const Divider(
+            indent: 15,
+            endIndent: 15,
+            color: Colors.purple,
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.edit,
+              color: Colors.blueAccent,
+            ),
+            title: const Text('Gerenciar Produtos'),
+            onTap: () {
+              Navigator.of(context).pushNamed(AppRoutes.PRODUCTS);
             },
           )
         ],
