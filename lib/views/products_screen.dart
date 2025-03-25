@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:shop/components/base_scaffold.dart';
 import '../components/app_drawer.dart';
 import '../components/product_item.dart';
+import '../utils/app_routes.dart';
 
 import '../providers/products_list.dart';
 
@@ -22,7 +23,9 @@ class ProductsScreen extends StatelessWidget {
       drawer: const AppDrawer(),
       action: [
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pushNamed(AppRoutes.PRODUCTS_FORM);
+          },
           icon: const Icon(Icons.add),
         )
       ],
