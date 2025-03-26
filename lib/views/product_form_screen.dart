@@ -1,9 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 import '../components/base_scaffold.dart';
+import '../providers/products_list.dart';
+import '../providers/product.dart';
 
 class ProductFormScreen extends StatefulWidget {
   const ProductFormScreen({super.key});
@@ -32,8 +36,24 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   }
 
   void _saveForm() {
-    _form.currentState?.save();
-    print(_formData.values);
+    //checa se o formulario é válido
+    bool isValid = _form.currentState!.validate();
+
+    //se nao estriver válido n salva.
+    if (!isValid) {
+      return;
+    }
+
+    _form.currentState!.save();
+    final newProduct = Product(
+      id: Random().nextDouble().toString(),
+      title: _formData['title'] as String,
+      description: _formData['description'] as String,
+      price: _formData['price'] as double,
+      imageUrl: _formData['imageUrl'] as String,
+    );
+
+    Provider.of<ProductsList>(context).addProduct(newProduct);
   }
 
   //O dispose serve para evitar memory leaks (vazamento de memória), é execucado quando o widget sai da árvore de widgets.
@@ -60,8 +80,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
           key: _form,
           child: ListView(
             children: [
+              //Titulo
               TextFormField(
-                decoration: InputDecoration(label: Text('Titulo')),
+                decoration: InputDecoration(labelText: 'Titulo'),
                 //altera o botão do teclado do usuario para Next ao inves do subimit
                 textInputAction: TextInputAction.next,
                 //quando o usuario clica no subimit o foco do formulário muda para o campo preço
@@ -70,9 +91,20 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 },
                 //quando houver o save começa a montar o map do objeto
                 onSaved: (value) => _formData['title'] = value!,
+                //validação de daos
+                validator: (value) {
+                  if (value!.trim().isEmpty || value.trim().length <= 3) {
+                    return 'Informe um título válido!';
+                  } else {
+                    return null;
+                  }
+                },
               ),
+
+              //Preço
               TextFormField(
-                decoration: InputDecoration(label: Text('Preço')),
+                decoration:
+                    InputDecoration(labelText: 'Preço', prefixText: 'R\$ '),
                 textInputAction: TextInputAction.next,
                 //indicação do foco
                 focusNode: _priceFocusNode,
@@ -86,8 +118,17 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_descritionFocusNode);
                 },
+                validator: (value) {
+                  if (value!.trim().isEmpty || double.parse(value) <= 0) {
+                    return 'Informe um valor válido!';
+                  } else {
+                    return null;
+                  }
+                },
                 onSaved: (value) => _formData['price'] = double.parse(value!),
               ),
+
+              //Descrição
               TextFormField(
                 decoration: InputDecoration(label: Text('Descrição')),
                 //maximo de linhas
@@ -98,8 +139,17 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_imageUrlFocusNode);
                 },
+                validator: (value) {
+                  if (value!.trim().isEmpty || value.trim().length <= 3) {
+                    return 'Informe uma descrição válida!';
+                  } else {
+                    return null;
+                  }
+                },
                 onSaved: (value) => _formData['description'] = value!,
               ),
+
+              //Imagem
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
