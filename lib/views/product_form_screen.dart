@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../components/base_scaffold.dart';
 
@@ -16,6 +17,8 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   final _descritionFocusNode = FocusNode();
   final _imageUrlFocusNode = FocusNode();
   final _imageUrlController = TextEditingController();
+  final _form = GlobalKey<FormState>();
+  final _formData = Map<String, Object>();
 
   @override
   void initState() {
@@ -26,6 +29,11 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
 
   void _updateImage() {
     setState(() {});
+  }
+
+  void _saveForm() {
+    _form.currentState?.save();
+    print(_formData.values);
   }
 
   //O dispose serve para evitar memory leaks (vazamento de memória), é execucado quando o widget sai da árvore de widgets.
@@ -43,9 +51,13 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   Widget build(BuildContext context) {
     return BaseScaffold(
       title: 'Formulário Produto',
+      action: [
+        IconButton(onPressed: _saveForm, icon: Icon(Icons.save)),
+      ],
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Form(
+          key: _form,
           child: ListView(
             children: [
               TextFormField(
@@ -56,6 +68,8 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_priceFocusNode);
                 },
+                //quando houver o save começa a montar o map do objeto
+                onSaved: (value) => _formData['title'] = value!,
               ),
               TextFormField(
                 decoration: InputDecoration(label: Text('Preço')),
@@ -64,10 +78,15 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 focusNode: _priceFocusNode,
                 //teclado numérico
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
+                //limita casas decimais e outros caracteres
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}$')),
+                ],
                 //muda o foco para o campo descrição
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_descritionFocusNode);
                 },
+                onSaved: (value) => _formData['price'] = double.parse(value!),
               ),
               TextFormField(
                 decoration: InputDecoration(label: Text('Descrição')),
@@ -79,6 +98,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_imageUrlFocusNode);
                 },
+                onSaved: (value) => _formData['description'] = value!,
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -92,6 +112,10 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                       textInputAction: TextInputAction.done,
                       focusNode: _imageUrlFocusNode,
                       controller: _imageUrlController,
+                      onFieldSubmitted: (_) {
+                        _saveForm();
+                      },
+                      onSaved: (value) => _formData['imageUrl'] = value!,
                     ),
                   ),
                   Container(
