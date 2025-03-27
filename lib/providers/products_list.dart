@@ -37,6 +37,20 @@ class ProductsList with ChangeNotifier {
     ));
     notifyListeners();
   }
+
+  void updateProduct(Product updatedProduct){
+    if (updatedProduct.id == null) {
+      return;
+    }
+
+    //atribui o index da lista aonde o id de oldProduct for igual a algum id já existente.
+    //caso não encontre atribuirá o valor -1 
+    final index = _items.indexWhere((prod) => prod.id == updatedProduct.id);
+
+    if (index >= 0) {
+      _items[index] = updatedProduct;
+    }
+  }
 }
 
  //itens comentados pois o gerenciamento de estado sobre os favoritos 
