@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'product.dart';
 import '../data/dummy_data.dart';
@@ -16,10 +18,23 @@ class ProductsList with ChangeNotifier {
   List<Product> get favoriteItems {
     return _items.where((prod) => prod.isFavorite).toList();
   }
-  
+
   //adiciona um produto e notifica os ouvintes
-  void addProduct(Product product) {
-    _items.add(product);
+  void addProduct(Product newProduct) {
+    final String idRandom = Random().nextDouble().toString();
+
+    //se já tiver o ID lança o erro
+    if (_items.any((p) => p.id == idRandom)) {
+      throw Exception("ID já existente.");
+    }
+
+    _items.add(Product(
+      id: idRandom,
+      title: newProduct.title,
+      price: newProduct.price,
+      description: newProduct.description,
+      imageUrl: newProduct.imageUrl,
+    ));
     notifyListeners();
   }
 }

@@ -36,7 +36,7 @@ class Cart with ChangeNotifier {
   void addItem(Product product) {
     //checa se o produto já existe no carrinho
     if (_items.containsKey(product.id)) {
-      _items.update(product.id, (existingItem) {
+      _items.update(product.id!, (existingItem) {
         return CartItem(
           id: existingItem.id,
           productId: existingItem.productId,
@@ -48,11 +48,11 @@ class Cart with ChangeNotifier {
       });
     } else {
       _items.putIfAbsent(
-        product
-            .id, //define a chave e abaixo o valor (objeto) <String, CartItem>
+        //define a chave e abaixo o valor (objeto) <String, CartItem>
+        product.id!,
         () => CartItem(
           id: Random().nextDouble().toString(),
-          productId: product.id,
+          productId: product.id!,
           title: product.title,
           quantity: 1,
           price: product.price,

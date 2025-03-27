@@ -1,6 +1,5 @@
-// ignore_for_file: prefer_const_constructors, prefer_collection_literals
+// ignore_for_file: prefer_const_constructors, prefer_collection_literals, use_build_context_synchronously
 
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -57,8 +56,8 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
         (endsWithPng || endsWithJpg || endsWithJpeg);
   }
 
-  void _saveForm() {
-    //checa se o formulario é válido
+  void _saveForm() async {
+    //checa se o formulario é válido, lembrando que _form é a key do formulário
     bool isValid = _form.currentState!.validate();
 
     //se nao estriver válido n salva.
@@ -66,16 +65,52 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       return;
     }
 
+    //acessa o estado atual do formulário (Form) e chama o onSaved de todos os TextTextFormField
     _form.currentState!.save();
+
     final newProduct = Product(
-      id: Random().nextDouble().toString(),
       title: _formData['title'] as String,
       description: _formData['description'] as String,
       price: _formData['price'] as double,
       imageUrl: _formData['imageUrl'] as String,
     );
 
-    Provider.of<ProductsList>(context).addProduct(newProduct);
+    try {
+      Provider.of<ProductsList>(context, listen: false).addProduct(newProduct);
+
+      await showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Center(child: Text('Prontinho!')),
+          content: Text('Produto Adicinado com Sucesso!'),
+          actions: [
+            //como a função é await vai esperar o click do usuário para fechar o Dialog
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: Text('OK'),
+            )
+          ],
+        ),
+      );
+      //e depois vai fechar a tela de formulário
+      Navigator.of(context).pop();
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Center(child: Text('Erro!!')),
+          content: Text(
+            'O Produto não foi salvo: ${e.toString()}, Refaça a operação!',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: Text('OK'),
+            )
+          ],
+        ),
+      );
+    }
   }
 
   //O dispose serve para evitar memory leaks (vazamento de memória), é execucado quando o widget sai da árvore de widgets.
@@ -248,7 +283,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     alignment: Alignment.center,
-                    padding: EdgeInsets.all(8),
+                    padding: _imageUrlController.text.isEmpty
+                        ? EdgeInsets.all(8)
+                        : EdgeInsets.all(0),
                     child: _imageUrlController.text.isEmpty
                         ? Text('Informe a URL')
                         : FittedBox(

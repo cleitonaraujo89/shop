@@ -10,8 +10,8 @@ import '../utils/app_routes.dart';
 
 import '../providers/products_list.dart';
 
-class ProductsScreen extends StatelessWidget {
-  const ProductsScreen({super.key});
+class ProductsManagementScreen extends StatelessWidget {
+  const ProductsManagementScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
