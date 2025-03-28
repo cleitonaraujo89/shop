@@ -38,41 +38,42 @@ class ProductsList with ChangeNotifier {
     notifyListeners();
   }
 
-  void updateProduct(Product updatedProduct){
+  void updateProduct(Product updatedProduct) {
     if (updatedProduct.id == null) {
       return;
     }
 
     //atribui o index da lista aonde o id de oldProduct for igual a algum id já existente.
-    //caso não encontre atribuirá o valor -1 
+    //caso não encontre atribuirá o valor -1
     final index = _items.indexWhere((prod) => prod.id == updatedProduct.id);
 
     if (index >= 0) {
       _items[index] = updatedProduct;
+      notifyListeners();
     }
   }
 }
 
- //itens comentados pois o gerenciamento de estado sobre os favoritos 
-  //foi transferido para ProductsOverviewScreen
+//itens comentados pois o gerenciamento de estado sobre os favoritos
+//foi transferido para ProductsOverviewScreen
 
-  //bool _FavoriteOnly = false;
+//bool _FavoriteOnly = false;
 
-  //usado para proteger os dados da lista original
-  // List<Product> get items {
-  //   if (_FavoriteOnly) {
-  //     return _items.where((prod) => prod.isFavorite).toList();
-  //   }
+//usado para proteger os dados da lista original
+// List<Product> get items {
+//   if (_FavoriteOnly) {
+//     return _items.where((prod) => prod.isFavorite).toList();
+//   }
 
-  //   return [..._items];
-  // }
+//   return [..._items];
+// }
 
-  // void showFavoriteOnly() {
-  //   _FavoriteOnly = true;
-  //   notifyListeners();
-  // }
+// void showFavoriteOnly() {
+//   _FavoriteOnly = true;
+//   notifyListeners();
+// }
 
-  // void showAll() {
-  //   _FavoriteOnly = false;
-  //   notifyListeners();
-  // }
+// void showAll() {
+//   _FavoriteOnly = false;
+//   notifyListeners();
+// }

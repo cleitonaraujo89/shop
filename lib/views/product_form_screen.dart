@@ -16,7 +16,7 @@ class ProductFormScreen extends StatefulWidget {
 }
 
 class _ProductFormScreenState extends State<ProductFormScreen> {
-  //variaveis para checagem do que é digitadopelo usuário
+  //variaveis para checagem do que é digitado pelo usuário
   String? titleError;
   String? priceError;
   String? descriptionError;
@@ -35,6 +35,32 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     super.initState();
     //adiciona um ouvinte para executar a função sempre que ouver uma mudança no estado do FocusNode
     _imageUrlFocusNode.addListener(_updateImage);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    //se tiver vazio
+    if (_formData.isEmpty) {
+      final receivedProduct = ModalRoute.of(context)?.settings.arguments;
+
+      //e se houver um produto recebido...
+      if (receivedProduct is Product) {
+        _formData['id'] = receivedProduct.id.toString();
+        _formData['title'] = receivedProduct.title.toString();
+        _formData['price'] = receivedProduct.price.toString();
+        _formData['description'] = receivedProduct.description.toString();
+        _formData['imageUrl'] = receivedProduct.imageUrl.toString();
+
+        //O campo da imagem n recebe o initialValue pois o texto é passado pelo controller
+        _imageUrlController.text = receivedProduct.imageUrl.toString();
+      } else {
+        _formData['title'] = '';
+        _formData['price'] = '';
+        _formData['description'] = '';
+      }
+    }
   }
 
   void _updateImage() {
@@ -58,7 +84,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
 
   void _saveForm() async {
     //checa se o formulario é válido, lembrando que _form é a key do formulário
-    bool isValid = _form.currentState!.validate();
+    final bool isValid = _form.currentState!.validate();
+    //variável de texto adaptativo para msg de confirmação
+    final String adaptativeText;
 
     //se nao estriver válido n salva.
     if (!isValid) {
@@ -69,6 +97,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     _form.currentState!.save();
 
     final newProduct = Product(
+      id: _formData['id'] != null ? _formData['id'] as String : null,
       title: _formData['title'] as String,
       description: _formData['description'] as String,
       price: _formData['price'] as double,
@@ -76,13 +105,22 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     );
 
     try {
-      Provider.of<ProductsList>(context, listen: false).addProduct(newProduct);
+      //se nao tiver ID adiciona, se tiver atualiza
+      if (_formData['id'] == null) {
+        Provider.of<ProductsList>(context, listen: false)
+            .addProduct(newProduct);
+        adaptativeText = 'Adicionado';
+      } else {
+        Provider.of<ProductsList>(context, listen: false)
+            .updateProduct(newProduct);
+        adaptativeText = 'Atualizado';
+      }
 
       await showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
           title: Center(child: Text('Prontinho!')),
-          content: Text('Produto Adicinado com Sucesso!'),
+          content: Text('Produto $adaptativeText com Sucesso!'),
           actions: [
             //como a função é await vai esperar o click do usuário para fechar o Dialog
             TextButton(
@@ -137,12 +175,14 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
           key: _form,
           child: ListView(
             children: [
-              //Titulo
+              // -------------  Titulo  ----------------
               TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Titulo',
+                  //o error text inicialmente é null, quando o user começa a digitar o setState muta pra frase de error, quando a condição é cumprida ele volta a ser null novamente anulando o error text
                   errorText: titleError,
                 ),
+                initialValue: _formData['title'].toString(),
                 //altera o botão do teclado do usuário para Next ao inves do subimit
                 textInputAction: TextInputAction.next,
                 //quando o usuário clica no subimit o foco do formulário muda para o campo preço
@@ -178,6 +218,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                   prefixText: 'R\$ ',
                   errorText: priceError,
                 ),
+                initialValue: _formData['price'].toString(),
                 textInputAction: TextInputAction.next,
                 //indicação do foco
                 focusNode: _priceFocusNode,
@@ -213,7 +254,10 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
               // ---------  Descrição -----------
               TextFormField(
                 decoration: InputDecoration(
-                    labelText: 'Descrição', errorText: descriptionError),
+                  labelText: 'Descrição',
+                  errorText: descriptionError,
+                ),
+                initialValue: _formData['description'].toString(),
                 //maximo de linhas
                 maxLines: 3,
                 //teclado adaptado para o usuário poder pular de linha, remoção do textInputAction
