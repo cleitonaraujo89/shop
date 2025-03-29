@@ -2,11 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 
 import '../components/base_scaffold.dart';
-import '../providers/products_list.dart';
 import '../providers/product.dart';
+import '../utils/products_form_utills.dart';
 
 class ProductFormScreen extends StatefulWidget {
   const ProductFormScreen({super.key});
@@ -82,73 +81,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
         (endsWithPng || endsWithJpg || endsWithJpeg);
   }
 
+  //Função que salva/altera o produto
   void _saveForm() async {
-    //checa se o formulario é válido, lembrando que _form é a key do formulário
-    final bool isValid = _form.currentState!.validate();
-    //variável de texto adaptativo para msg de confirmação
-    final String adaptativeText;
-
-    //se nao estriver válido n salva.
-    if (!isValid) {
-      return;
-    }
-
-    //acessa o estado atual do formulário (Form) e chama o onSaved de todos os TextTextFormField
-    _form.currentState!.save();
-
-    final newProduct = Product(
-      id: _formData['id'] != null ? _formData['id'] as String : null,
-      title: _formData['title'] as String,
-      description: _formData['description'] as String,
-      price: _formData['price'] as double,
-      imageUrl: _formData['imageUrl'] as String,
-    );
-
-    try {
-      //se nao tiver ID adiciona, se tiver atualiza
-      if (_formData['id'] == null) {
-        Provider.of<ProductsList>(context, listen: false)
-            .addProduct(newProduct);
-        adaptativeText = 'Adicionado';
-      } else {
-        Provider.of<ProductsList>(context, listen: false)
-            .updateProduct(newProduct);
-        adaptativeText = 'Atualizado';
-      }
-
-      await showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Center(child: Text('Prontinho!')),
-          content: Text('Produto $adaptativeText com Sucesso!'),
-          actions: [
-            //como a função é await vai esperar o click do usuário para fechar o Dialog
-            TextButton(
-              onPressed: () => Navigator.of(ctx).pop(),
-              child: Text('OK'),
-            )
-          ],
-        ),
-      );
-      //e depois vai fechar a tela de formulário
-      Navigator.of(context).pop();
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Center(child: Text('Erro!!')),
-          content: Text(
-            'O Produto não foi salvo: ${e.toString()}, Refaça a operação!',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(ctx).pop(),
-              child: Text('OK'),
-            )
-          ],
-        ),
-      );
-    }
+    await saveProductForm(context, _form, _formData, _imageUrlController);
   }
 
   //O dispose serve para evitar memory leaks (vazamento de memória), é execucado quando o widget sai da árvore de widgets.
@@ -316,6 +251,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                     ),
                   ),
                   Container(
+                    //precisamos de um espaço definido para o FittedBox
                     height: 100,
                     width: 100,
                     margin: EdgeInsets.only(top: 8, left: 10, right: 8),

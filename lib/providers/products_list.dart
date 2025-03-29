@@ -52,6 +52,20 @@ class ProductsList with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  bool deleteProduct ({required String productID}){
+
+    final index = _items.indexWhere((prod) => prod.id == productID);
+
+    if (index >= 0) {
+      _items.removeAt(index);
+      notifyListeners();
+
+      return true;
+    } 
+
+    return false;
+  }
 }
 
 //itens comentados pois o gerenciamento de estado sobre os favoritos
