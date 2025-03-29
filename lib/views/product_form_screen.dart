@@ -268,9 +268,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                         : EdgeInsets.all(0),
                     child: _imageUrlController.text.isEmpty
                         ? Text('Informe a URL')
-                        : FittedBox(
+                        : Image.network(
+                            _imageUrlController.text,
                             fit: BoxFit.cover,
-                            child: Image.network(_imageUrlController.text),
                           ),
                   ),
                 ],

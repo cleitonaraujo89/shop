@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'product.dart';
 import '../data/dummy_data.dart';
+import '../config/firebase_config.dart';
 
 class ProductsList with ChangeNotifier {
   final List<Product> _items = DUMMY_PRODUCTS;
@@ -20,22 +23,50 @@ class ProductsList with ChangeNotifier {
   }
 
   //adiciona um produto e notifica os ouvintes
-  void addProduct(Product newProduct) {
+  Future<void> addProduct(Product newProduct) async {
     final String idRandom = Random().nextDouble().toString();
 
     //se já tiver o ID lança o erro
     if (_items.any((p) => p.id == idRandom)) {
       throw Exception("ID já existente.");
     }
+    //https://cdn.pixabay.com/photo/2019/06/30/21/08/balloon-4308798_640.png
+    const String url = '${FirebaseConfig.dataBaseUrl}products.json';
 
-    _items.add(Product(
-      id: idRandom,
-      title: newProduct.title,
-      price: newProduct.price,
-      description: newProduct.description,
-      imageUrl: newProduct.imageUrl,
-    ));
-    notifyListeners();
+    try {
+      await http
+          .post(
+        Uri.parse(url),
+        body: json.encode({
+          'title': newProduct.title,
+          'price': newProduct.price,
+          'description': newProduct.description,
+          'imageUrl': newProduct.imageUrl,
+          'isFavorite': newProduct.isFavorite,
+        }),
+      )
+          .then(
+        (response) {
+          if (response.statusCode >= 400) {
+            throw Exception('Erro ao enviar dados: ${response.body}');
+          }
+
+          _items.add(Product(
+            //response.body é uma string JSON.
+            //jsonDecode(response.body) transforma essa string JSON em um mapa (Map<String, dynamic>).
+            //['name'] acessa a chave "name" dentro do mapa retornado.
+            id: jsonDecode(response.body)['name'],
+            title: newProduct.title,
+            price: newProduct.price,
+            description: newProduct.description,
+            imageUrl: newProduct.imageUrl,
+          ));
+          notifyListeners();
+        },
+      );
+    } catch (error) {
+      throw Exception('Erro ao enviar dados: ${error.toString()}');
+    }
   }
 
   void updateProduct(Product updatedProduct) {
@@ -53,8 +84,7 @@ class ProductsList with ChangeNotifier {
     }
   }
 
-  bool deleteProduct ({required String productID}){
-
+  bool deleteProduct({required String productID}) {
     final index = _items.indexWhere((prod) => prod.id == productID);
 
     if (index >= 0) {
@@ -62,7 +92,7 @@ class ProductsList with ChangeNotifier {
       notifyListeners();
 
       return true;
-    } 
+    }
 
     return false;
   }
