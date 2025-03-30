@@ -23,8 +23,7 @@ Future<void> alert(
       ],
     ),
     //then do showDialog
-  );
-  Navigator.of(context).pop();
+  );  
 }
 
 Future<void> saveProductForm(
@@ -59,11 +58,13 @@ Future<void> saveProductForm(
       await Provider.of<ProductsList>(context, listen: false)
           .addProduct(newProduct);
 
-      alert(
+      await alert(
         context: context,
         title: 'Sucesso!',
         content: 'Produto Adicionado!',
       );
+
+      Navigator.of(context).pop();
     } else {
       Provider.of<ProductsList>(context, listen: false)
           .updateProduct(newProduct);

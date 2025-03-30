@@ -57,6 +57,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
         //O campo da imagem n recebe o initialValue pois o texto é passado pelo controller
         _imageUrlController.text = receivedProduct.imageUrl.toString();
       } else {
+        //caso n tenha recebido o produto inicializa os campos vazios
         _formData['title'] = '';
         _formData['price'] = '';
         _formData['description'] = '';
@@ -64,6 +65,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     }
   }
 
+  //atualiza a interface para mostrar a imagem
   void _updateImage() {
     if (isValidImageUrl(_imageUrlController.text)) {
       setState(() {});
@@ -85,19 +87,17 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
 
   //Função que salva/altera o produto
   void _saveForm() async {
-    
     //muda o stado quando entra para carregar a tela de loading
     setState(() {
       _isLoading = true;
     });
 
     //espera o retorno para mudar a tela novamente
-    await saveProductForm(context, _form, _formData, _imageUrlController)
-        .then((_) {
-          
-      setState(() {
-        _isLoading = false;
-      });
+    await saveProductForm(context, _form, _formData, _imageUrlController);
+
+    //sai da tela de loading
+    setState(() {
+      _isLoading = false;
     });
   }
 

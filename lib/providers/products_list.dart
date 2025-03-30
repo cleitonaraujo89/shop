@@ -33,38 +33,38 @@ class ProductsList with ChangeNotifier {
     //https://cdn.pixabay.com/photo/2019/06/30/21/08/balloon-4308798_640.png
     const String url = '${FirebaseConfig.dataBaseUrl}products';
 
-    //try {
-      return await http
-          .post(Uri.parse(url),
-              body: json.encode({
-                'title': newProduct.title,
-                'price': newProduct.price,
-                'description': newProduct.description,
-                'imageUrl': newProduct.imageUrl,
-                'isFavorite': newProduct.isFavorite,
-              }))
-          .then(
-        (response) {
-          // if (response.statusCode >= 400) {
-          //   throw Exception('Erro ao enviar dados: ${response.body}');
-          // }
+    try {
+      final response = await http.post(Uri.parse(url),
+          body: json.encode({
+            'title': newProduct.title,
+            'price': newProduct.price,
+            'description': newProduct.description,
+            'imageUrl': newProduct.imageUrl,
+            'isFavorite': newProduct.isFavorite,
+          }));
 
-          _items.add(Product(
-            //response.body é uma string JSON.
-            //jsonDecode(response.body) transforma essa string JSON em um mapa (Map<String, dynamic>).
-            //['name'] acessa a chave "name" dentro do mapa retornado.
-            id: jsonDecode(response.body)['name'],
-            title: newProduct.title,
-            price: newProduct.price,
-            description: newProduct.description,
-            imageUrl: newProduct.imageUrl,
-          ));
-          notifyListeners();
-        },
-      );
-    // } catch (error) {
-    //   throw Exception('Erro ao enviar dados: ${error.toString()}');
-    // }
+      if (response.statusCode >= 400) {
+        throw Exception('Erro ao enviar dados: ${response.body}');
+      }
+
+      _items.add(Product(
+        //response.body é uma string JSON.
+        //jsonDecode(response.body) transforma essa string JSON em um mapa (Map<String, dynamic>).
+        //['name'] acessa a chave "name" dentro do mapa retornado.
+        id: jsonDecode(response.body)['name'],
+        title: newProduct.title,
+        price: newProduct.price,
+        description: newProduct.description,
+        imageUrl: newProduct.imageUrl,
+      ));
+      notifyListeners();
+    } catch (error) {
+      if (error.toString().startsWith('Erro ao enviar')) {
+        throw Exception(error.toString());
+      } else {
+        throw Exception('Falha na execução, por favor refaça a operação');
+      }
+    }
   }
 
   void updateProduct(Product updatedProduct) {
