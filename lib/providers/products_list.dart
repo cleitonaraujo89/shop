@@ -31,22 +31,23 @@ class ProductsList with ChangeNotifier {
       throw Exception("ID já existente.");
     }
     //https://cdn.pixabay.com/photo/2019/06/30/21/08/balloon-4308798_640.png
-    const String url = '${FirebaseConfig.dataBaseUrl}products.json';
+    const String url = '${FirebaseConfig.dataBaseUrl}products';
 
-    try {
-      return await http.post(
-        Uri.parse(url),
-        body: json.encode({
-          'title': newProduct.title,
-          'price': newProduct.price,
-          'description': newProduct.description,
-          'imageUrl': newProduct.imageUrl,
-          'isFavorite': newProduct.isFavorite,
-        })).then(
+    //try {
+      return await http
+          .post(Uri.parse(url),
+              body: json.encode({
+                'title': newProduct.title,
+                'price': newProduct.price,
+                'description': newProduct.description,
+                'imageUrl': newProduct.imageUrl,
+                'isFavorite': newProduct.isFavorite,
+              }))
+          .then(
         (response) {
-          if (response.statusCode >= 400) {
-            throw Exception('Erro ao enviar dados: ${response.body}');
-          }
+          // if (response.statusCode >= 400) {
+          //   throw Exception('Erro ao enviar dados: ${response.body}');
+          // }
 
           _items.add(Product(
             //response.body é uma string JSON.
@@ -61,9 +62,9 @@ class ProductsList with ChangeNotifier {
           notifyListeners();
         },
       );
-    } catch (error) {
-      throw Exception('Erro ao enviar dados: ${error.toString()}');
-    }
+    // } catch (error) {
+    //   throw Exception('Erro ao enviar dados: ${error.toString()}');
+    // }
   }
 
   void updateProduct(Product updatedProduct) {

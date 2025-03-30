@@ -85,6 +85,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
 
   //Função que salva/altera o produto
   void _saveForm() async {
+    
     //muda o stado quando entra para carregar a tela de loading
     setState(() {
       _isLoading = true;
@@ -93,6 +94,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     //espera o retorno para mudar a tela novamente
     await saveProductForm(context, _form, _formData, _imageUrlController)
         .then((_) {
+          
       setState(() {
         _isLoading = false;
       });

@@ -5,6 +5,28 @@ import 'package:provider/provider.dart';
 import '../providers/products_list.dart';
 import '../providers/product.dart';
 
+Future<void> alert(
+    {required BuildContext context,
+    required String title,
+    required String content}) async {
+  await showDialog(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: Center(child: Text(title)),
+      content: Text(content),
+      actions: [
+        //como a função é await vai esperar o click do usuário para fechar o Dialog
+        TextButton(
+          onPressed: () => Navigator.of(ctx).pop(),
+          child: Text('OK'),
+        ),
+      ],
+    ),
+    //then do showDialog
+  );
+  Navigator.of(context).pop();
+}
+
 Future<void> saveProductForm(
   BuildContext context,
   GlobalKey<FormState> formKey,
@@ -31,52 +53,26 @@ Future<void> saveProductForm(
   );
 
   //variável de texto adaptativo para msg de confirmação
-  String adaptativeText;
+  // String adaptativeText;
   try {
     if (formData['id'] == null) {
-      Provider.of<ProductsList>(context, listen: false).addProduct(newProduct).then((_) {
-        
-      });
-      adaptativeText = 'Adicionado';
+      await Provider.of<ProductsList>(context, listen: false)
+          .addProduct(newProduct);
+
+      alert(
+        context: context,
+        title: 'Sucesso!',
+        content: 'Produto Adicionado!',
+      );
     } else {
       Provider.of<ProductsList>(context, listen: false)
           .updateProduct(newProduct);
-      adaptativeText = 'Atualizado';
+      
     }
 
-    await showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Center(child: Text('Prontinho!')),
-        content: Text('Produto $adaptativeText com Sucesso!'),
-        actions: [
-          //como a função é await vai esperar o click do usuário para fechar o Dialog
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text('OK'),
-          ),
-        ],
-      ),
-    );
-
-    //e depois vai fechar a tela de formulário
-    Navigator.of(context).pop();
+   
   } catch (e) {
-    await showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Center(child: Text('Erro!!')),
-        content: Text(
-          'O Produto não foi salvo: ${e.toString()}, Refaça a operação!',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text('OK'),
-          ),
-        ],
-      ),
-    );
+    alert(context: context, title: 'Oops!', content: 'Tivemos um erro');
   }
 }
 
