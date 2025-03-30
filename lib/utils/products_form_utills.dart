@@ -34,7 +34,9 @@ Future<void> saveProductForm(
   String adaptativeText;
   try {
     if (formData['id'] == null) {
-      Provider.of<ProductsList>(context, listen: false).addProduct(newProduct);
+      Provider.of<ProductsList>(context, listen: false).addProduct(newProduct).then((_) {
+        
+      });
       adaptativeText = 'Adicionado';
     } else {
       Provider.of<ProductsList>(context, listen: false)

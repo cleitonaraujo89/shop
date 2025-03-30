@@ -34,8 +34,7 @@ class ProductsList with ChangeNotifier {
     const String url = '${FirebaseConfig.dataBaseUrl}products.json';
 
     try {
-      await http
-          .post(
+      return await http.post(
         Uri.parse(url),
         body: json.encode({
           'title': newProduct.title,
@@ -43,9 +42,7 @@ class ProductsList with ChangeNotifier {
           'description': newProduct.description,
           'imageUrl': newProduct.imageUrl,
           'isFavorite': newProduct.isFavorite,
-        }),
-      )
-          .then(
+        })).then(
         (response) {
           if (response.statusCode >= 400) {
             throw Exception('Erro ao enviar dados: ${response.body}');
