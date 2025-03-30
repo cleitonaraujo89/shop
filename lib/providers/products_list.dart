@@ -1,14 +1,16 @@
+//   https://cdn.pixabay.com/photo/2019/06/30/21/08/balloon-4308798_640.png
 import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'product.dart';
-import '../data/dummy_data.dart';
+//import '../data/dummy_data.dart';
 import '../config/firebase_config.dart';
 
 class ProductsList with ChangeNotifier {
-  final List<Product> _items = DUMMY_PRODUCTS;
+  final List<Product> _items = [];
+  final String _url = '${FirebaseConfig.dataBaseUrl}products.json';
 
   List<Product> get items {
     return [..._items];
@@ -22,6 +24,39 @@ class ProductsList with ChangeNotifier {
     return _items.where((prod) => prod.isFavorite).toList();
   }
 
+  Future<void> loadProducts() async {
+    final response = await http.get(Uri.parse(_url));
+
+    if (response.statusCode >= 400) {
+      throw Exception('Erro ao receber dados: ${response.body}');
+    }
+
+    //se n tiver produtos... return
+    if (response.body.isEmpty || response.body == "null") {
+      return;
+    }
+
+    Map<String, dynamic> data = jsonDecode(response.body);
+
+    //limpa a lista para que não haja duplicação da lista toda vez que carregar a pagina.
+    _items.clear();
+
+    //para cada item em data vai pegar o is e os dados do produto (key, value) e adicionar a lista de produtos
+    data.forEach((productId, productData) {
+      _items.add(Product(
+        id: productId,
+        title: productData['title'],
+        price: productData['price'],
+        description: productData['description'],
+        imageUrl: productData['imageUrl'],
+        isFavorite: productData['isFavorite'],
+      ));
+    });
+
+    notifyListeners();
+    return Future.value();
+  }
+
   //adiciona um produto e notifica os ouvintes
   Future<void> addProduct(Product newProduct) async {
     final String idRandom = Random().nextDouble().toString();
@@ -30,11 +65,9 @@ class ProductsList with ChangeNotifier {
     if (_items.any((p) => p.id == idRandom)) {
       throw Exception("ID já existente.");
     }
-    //https://cdn.pixabay.com/photo/2019/06/30/21/08/balloon-4308798_640.png
-    const String url = '${FirebaseConfig.dataBaseUrl}products';
 
     try {
-      final response = await http.post(Uri.parse(url),
+      final response = await http.post(Uri.parse(_url),
           body: json.encode({
             'title': newProduct.title,
             'price': newProduct.price,

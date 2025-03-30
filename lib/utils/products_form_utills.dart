@@ -4,27 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/products_list.dart';
 import '../providers/product.dart';
+import '../components/alert.dart';
 
-Future<void> alert(
-    {required BuildContext context,
-    required String title,
-    required String content}) async {
-  await showDialog(
-    context: context,
-    builder: (ctx) => AlertDialog(
-      title: Center(child: Text(title)),
-      content: Text(content),
-      actions: [
-        //como a função é await vai esperar o click do usuário para fechar o Dialog
-        TextButton(
-          onPressed: () => Navigator.of(ctx).pop(),
-          child: Text('OK'),
-        ),
-      ],
-    ),
-    //then do showDialog
-  );  
-}
 
 Future<void> saveProductForm(
   BuildContext context,
@@ -68,10 +49,7 @@ Future<void> saveProductForm(
     } else {
       Provider.of<ProductsList>(context, listen: false)
           .updateProduct(newProduct);
-      
     }
-
-   
   } catch (e) {
     alert(context: context, title: 'Oops!', content: 'Tivemos um erro');
   }
