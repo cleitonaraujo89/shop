@@ -19,6 +19,7 @@ final DUMMY_PRODUCTS = [
     imageUrl:
         'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
   ),
+  
   Product(
     id: 'p3',
     title: 'Yellow Scarf',

@@ -6,7 +6,6 @@ import '../providers/products_list.dart';
 import '../providers/product.dart';
 import '../components/alert.dart';
 
-
 Future<void> saveProductForm(
   BuildContext context,
   GlobalKey<FormState> formKey,
@@ -47,8 +46,17 @@ Future<void> saveProductForm(
 
       Navigator.of(context).pop();
     } else {
-      Provider.of<ProductsList>(context, listen: false)
+      await Provider.of<ProductsList>(context, listen: false)
           .updateProduct(newProduct);
+
+      await alert(
+        context: context,
+        title: 'Sucesso!',
+        content: 'Produto Atualizado!',
+      );
+
+      await Provider.of<ProductsList>(context, listen: false).loadProducts();
+      Navigator.of(context).pop();
     }
   } catch (e) {
     alert(context: context, title: 'Oops!', content: 'Tivemos um erro');

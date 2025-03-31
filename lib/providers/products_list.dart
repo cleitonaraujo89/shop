@@ -10,7 +10,7 @@ import '../config/firebase_config.dart';
 
 class ProductsList with ChangeNotifier {
   final List<Product> _items = [];
-  final String _url = '${FirebaseConfig.dataBaseUrl}products.json';
+  final String _url = FirebaseConfig.dataBaseUrl;
 
   List<Product> get items {
     return [..._items];
@@ -25,7 +25,7 @@ class ProductsList with ChangeNotifier {
   }
 
   Future<void> loadProducts() async {
-    final response = await http.get(Uri.parse(_url));
+    final response = await http.get(Uri.parse('$_url/products.json'));
 
     if (response.statusCode >= 400) {
       throw Exception('Erro ao receber dados: ${response.body}');
@@ -67,7 +67,7 @@ class ProductsList with ChangeNotifier {
     }
 
     try {
-      final response = await http.post(Uri.parse(_url),
+      final response = await http.post(Uri.parse('$_url/products.json'),
           body: json.encode({
             'title': newProduct.title,
             'price': newProduct.price,
@@ -100,7 +100,7 @@ class ProductsList with ChangeNotifier {
     }
   }
 
-  void updateProduct(Product updatedProduct) {
+  Future<void> updateProduct(Product updatedProduct) async {
     if (updatedProduct.id == null) {
       return;
     }
@@ -110,8 +110,17 @@ class ProductsList with ChangeNotifier {
     final index = _items.indexWhere((prod) => prod.id == updatedProduct.id);
 
     if (index >= 0) {
-      _items[index] = updatedProduct;
+      await http.patch(
+        Uri.parse("$_url/products/${updatedProduct.id}.json"),
+        body: json.encode({
+          'title': updatedProduct.title,
+          'price': updatedProduct.price,
+          'description': updatedProduct.description,
+          'imageUrl': updatedProduct.imageUrl,
+        }),
+      );
       notifyListeners();
+      
     }
   }
 
