@@ -40,9 +40,21 @@ class ProductGridItem extends StatelessWidget {
           //atentar que não referencia diretamente o product acima
           leading: Consumer<Product>(
             builder: (ctx, productConsumer, _) => IconButton(
-              onPressed: () {
+              onPressed: () async {
                 //ao mudar o estado do favorito altera o icone
-                productConsumer.toggleFavorite();
+                try {
+                  await productConsumer.toggleFavorite();
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Erro ao Favoritar, tente novamente!',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      duration: Duration(seconds: 3),
+                    ),
+                  );
+                }
               },
               icon: Icon(productConsumer.isFavorite
                   ? Icons.favorite

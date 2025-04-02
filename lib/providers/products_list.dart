@@ -10,7 +10,7 @@ import '../config/firebase_config.dart';
 
 class ProductsList with ChangeNotifier {
   final List<Product> _items = [];
-  final String _url = FirebaseConfig.dataBaseUrl;
+  final String _url = FirebaseConfig.urlProducts;
 
   List<Product> get items {
     return [..._items];
@@ -25,7 +25,7 @@ class ProductsList with ChangeNotifier {
   }
 
   Future<void> loadProducts() async {
-    final response = await http.get(Uri.parse('$_url/products.json'));
+    final response = await http.get(Uri.parse('$_url.json'));
 
     if (response.statusCode >= 400) {
       throw Exception('Erro ao receber dados: ${response.body}');
@@ -57,7 +57,7 @@ class ProductsList with ChangeNotifier {
     return Future.value();
   }
 
-  //adiciona um produto e notifica os ouvintes
+  //  ------- ADIÇÃO DE PRODUTO ---------
   Future<void> addProduct(Product newProduct) async {
     final String idRandom = Random().nextDouble().toString();
 
@@ -67,7 +67,7 @@ class ProductsList with ChangeNotifier {
     }
 
     try {
-      final response = await http.post(Uri.parse('$_url/products.json'),
+      final response = await http.post(Uri.parse('$_url.json'),
           body: json.encode({
             'title': newProduct.title,
             'price': newProduct.price,
@@ -100,6 +100,7 @@ class ProductsList with ChangeNotifier {
     }
   }
 
+  //  ------------ ATUALIZAÇÃO DE PRODUTO ---------------------
   Future<void> updateProduct(Product updatedProduct) async {
     if (updatedProduct.id == null) {
       return;
@@ -111,7 +112,7 @@ class ProductsList with ChangeNotifier {
 
     if (index >= 0) {
       await http.patch(
-        Uri.parse("$_url/products/${updatedProduct.id}.json"),
+        Uri.parse("$_url/${updatedProduct.id}.json"),
         body: json.encode({
           'title': updatedProduct.title,
           'price': updatedProduct.price,
@@ -119,21 +120,30 @@ class ProductsList with ChangeNotifier {
           'imageUrl': updatedProduct.imageUrl,
         }),
       );
+      //atualiza a lista sem precisar carregar novamente
+      _items[index] = updatedProduct;
       notifyListeners();
-      
     }
   }
 
-  bool deleteProduct({required String productID}) {
+  //
+  Future<bool> deleteProduct({required String productID}) async {
     final index = _items.indexWhere((prod) => prod.id == productID);
 
     if (index >= 0) {
+      final response = await http.delete(Uri.parse("$_url/$productID.json"));
+
+      if (response.statusCode >= 400) {
+        return false;
+      }
+
       _items.removeAt(index);
       notifyListeners();
 
       return true;
     }
 
+    //se n achar o ID
     return false;
   }
 }

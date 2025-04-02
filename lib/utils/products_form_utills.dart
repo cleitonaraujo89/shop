@@ -55,7 +55,6 @@ Future<void> saveProductForm(
         content: 'Produto Atualizado!',
       );
 
-      await Provider.of<ProductsList>(context, listen: false).loadProducts();
       Navigator.of(context).pop();
     }
   } catch (e) {
@@ -71,74 +70,90 @@ Future<void> deleteProduct({
 }) async {
   await showDialog(
     context: context,
-    builder: (ctx) => AlertDialog(
-      title: Center(child: Text('Tem Certeza?')),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text('Deseja excluir este produto ?'),
-          SizedBox(
-            height: 15,
-          ),
-          Text(productTitle),
-          SizedBox(
-            height: 15,
-          ),
-          Center(
-            child: SizedBox(
-              height: 100,
-              width: 100,
-              child: FittedBox(
-                fit: BoxFit.cover,
-                child: Image.network(imageUrl),
-              ),
-            ),
-          )
-        ],
-      ),
-      actions: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('Voltar'),
-            ),
-            TextButton(
-              onPressed: () {
-                final bool deletedItem =
-                    Provider.of<ProductsList>(context, listen: false)
-                        .deleteProduct(productID: productID);
+    builder: (ctx) {
+      bool loading = false;
 
-                if (deletedItem) {
-                  Navigator.of(context).pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'Produto Removido!',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      duration: Duration(seconds: 3),
-                    ),
-                  );
-                } else {
-                  Navigator.of(context).pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'Falha na remoção do produto!',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      duration: Duration(seconds: 3),
-                    ),
-                  );
-                }
-              },
-              child: Text('Deletar'),
+      return StatefulBuilder(
+        builder: (ctx, setState) => AlertDialog(
+          title: Center(child: Text('Tem Certeza?')),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Deseja excluir este produto ?'),
+              loading
+                  ? Center(child: CircularProgressIndicator.adaptive())
+                  : SizedBox(height: 36),
+              SizedBox(
+                height: 15,
+              ),
+              Text(productTitle),
+              SizedBox(
+                height: 15,
+              ),
+              Center(
+                child: SizedBox(
+                  height: 100,
+                  width: 100,
+                  child: FittedBox(
+                    fit: BoxFit.cover,
+                    child: Image.network(imageUrl),
+                  ),
+                ),
+              )
+            ],
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('Voltar'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    setState(() => loading = true);
+                    final bool deletedItem =
+                        await Provider.of<ProductsList>(context, listen: false)
+                            .deleteProduct(productID: productID);
+
+                    if (deletedItem) {
+                      setState(() => loading = false);
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Produto Removido!',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          duration: Duration(seconds: 3),
+                        ),
+                      );
+                    } else {
+                      setState(() => loading = false);
+                      alert(
+                          context: context,
+                          title: 'Oops!',
+                          content: 'falha na remoção do item');
+                      // Navigator.of(context).pop();
+                      // ScaffoldMessenger.of(context).showSnackBar(
+                      //   SnackBar(
+                      //     content: Text(
+                      //       'Falha na remoção do produto!',
+                      //       style: TextStyle(fontSize: 18),
+                      //     ),
+                      //     duration: Duration(seconds: 3),
+                      //   ),
+                      // );
+                    }
+                  },
+                  child: Text('Deletar'),
+                ),
+              ],
             ),
           ],
         ),
-      ],
-    ),
+      );
+    },
   );
 }
