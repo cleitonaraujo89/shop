@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Future<void> alert(
+Future<void> Alert(
     {required BuildContext context,
     required String title,
     required String content}) async {
@@ -18,5 +18,5 @@ Future<void> alert(
       ],
     ),
     //then do showDialog
-  );  
+  );
 }

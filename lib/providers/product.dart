@@ -29,11 +29,6 @@ class Product with ChangeNotifier {
       final response = await http.patch(
         Uri.parse('${FirebaseConfig.urlProducts}/$id.json'),
         body: json.encode({
-          'id': id,
-          'title': title,
-          'price': price,
-          'description': description,
-          'imageUrl': imageUrl,
           'isFavorite': isFavorite,
         }),
       );
@@ -41,7 +36,7 @@ class Product with ChangeNotifier {
       if (response.statusCode >= 400) {
         throw Exception();
       }
-     // caso algo dê errado volta a condição inicial 
+      // caso algo dê errado volta a condição inicial
     } catch (e) {
       isFavorite = !isFavorite;
       notifyListeners();

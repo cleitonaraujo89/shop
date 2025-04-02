@@ -38,7 +38,7 @@ Future<void> saveProductForm(
       await Provider.of<ProductsList>(context, listen: false)
           .addProduct(newProduct);
 
-      await alert(
+      await Alert(
         context: context,
         title: 'Sucesso!',
         content: 'Produto Adicionado!',
@@ -49,7 +49,7 @@ Future<void> saveProductForm(
       await Provider.of<ProductsList>(context, listen: false)
           .updateProduct(newProduct);
 
-      await alert(
+      await Alert(
         context: context,
         title: 'Sucesso!',
         content: 'Produto Atualizado!',
@@ -58,7 +58,7 @@ Future<void> saveProductForm(
       Navigator.of(context).pop();
     }
   } catch (e) {
-    alert(context: context, title: 'Oops!', content: 'Tivemos um erro');
+    Alert(context: context, title: 'Oops!', content: 'Tivemos um erro');
   }
 }
 
@@ -131,7 +131,7 @@ Future<void> deleteProduct({
                       );
                     } else {
                       setState(() => loading = false);
-                      alert(
+                      Alert(
                           context: context,
                           title: 'Oops!',
                           content: 'falha na remoção do item');

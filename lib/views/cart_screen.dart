@@ -6,6 +6,7 @@ import 'package:shop/components/base_scaffold.dart';
 import 'package:shop/components/widget_cart_item.dart';
 import '../providers/cart.dart';
 import '../providers/orders.dart';
+import '../components/alert.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -33,11 +34,6 @@ class CartScreen extends StatelessWidget {
                   SizedBox(
                     width: 10,
                   ),
-                  // Chip(
-                  //   label: Text('R\$ 1000.00'),
-                  //   backgroundColor: Colors.grey[300],
-                  //   shape: StadiumBorder(side: BorderSide.none),
-                  // )
                   DecoratedBox(
                     decoration: BoxDecoration(
                       color: Theme.of(context).primaryColor,
@@ -57,14 +53,7 @@ class CartScreen extends StatelessWidget {
                     ),
                   ),
                   Spacer(), //cria um espaço entre os elementos
-                  TextButton(
-                    onPressed: () {
-                      Provider.of<Orders>(context, listen: false)
-                          .addOrder(cart);
-                      cart.clear();
-                    },
-                    child: Text('COMPRAR'),
-                  )
+                  OrderButton(cart: cart)
                 ],
               ),
             ),
@@ -72,11 +61,58 @@ class CartScreen extends StatelessWidget {
           SizedBox(height: 10),
           Expanded(
             child: ListView.builder(
-                itemCount: cartItems.length,
-                itemBuilder: (ctx, i) => WidgetCartItem(cartItems[i])),
+              itemCount: cartItems.length,
+              itemBuilder: (ctx, i) => WidgetCartItem(cartItems[i]),
+            ),
           )
         ],
       ),
+    );
+  }
+}
+
+class OrderButton extends StatefulWidget {
+  const OrderButton({
+    super.key,
+    required this.cart,
+  });
+
+  final Cart cart;
+
+  @override
+  State<OrderButton> createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<OrderButton> {
+  bool _isLoading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      //desabilitando o botão para evitar requisições vazias
+      onPressed: widget.cart.totalAmout == 0
+          ? null
+          : () async {
+              setState(() {
+                _isLoading = true;
+              });
+              try {
+                await Provider.of<Orders>(context, listen: false)
+                    .addOrder(widget.cart);
+                setState(() {
+                  _isLoading = false;
+                });
+
+                widget.cart.clear();
+              } catch (e) {
+                Alert(
+                    context: context,
+                    title: 'Oops',
+                    content: 'Algo deu errado, tente novamente');
+              }
+            },
+      child:
+          _isLoading ? CircularProgressIndicator.adaptive() : Text('COMPRAR'),
     );
   }
 }
