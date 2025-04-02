@@ -20,7 +20,7 @@ class Product with ChangeNotifier {
       required this.imageUrl,
       this.isFavorite = false});
 
-  //altera o estado de favorito do produto e notivifa os ouvintes
+  //altera o estado de favorito do produto e notifica os ouvintes
   Future<void> toggleFavorite() async {
     isFavorite = !isFavorite;
     notifyListeners();
@@ -41,6 +41,7 @@ class Product with ChangeNotifier {
       if (response.statusCode >= 400) {
         throw Exception();
       }
+     // caso algo dê errado volta a condição inicial 
     } catch (e) {
       isFavorite = !isFavorite;
       notifyListeners();

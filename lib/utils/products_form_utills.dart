@@ -135,16 +135,6 @@ Future<void> deleteProduct({
                           context: context,
                           title: 'Oops!',
                           content: 'falha na remoção do item');
-                      // Navigator.of(context).pop();
-                      // ScaffoldMessenger.of(context).showSnackBar(
-                      //   SnackBar(
-                      //     content: Text(
-                      //       'Falha na remoção do produto!',
-                      //       style: TextStyle(fontSize: 18),
-                      //     ),
-                      //     duration: Duration(seconds: 3),
-                      //   ),
-                      // );
                     }
                   },
                   child: Text('Deletar'),

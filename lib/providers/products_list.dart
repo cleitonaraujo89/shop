@@ -24,6 +24,7 @@ class ProductsList with ChangeNotifier {
     return _items.where((prod) => prod.isFavorite).toList();
   }
 
+  // ---------------- CARREGA A LISTA DE PRODUTOS -----------
   Future<void> loadProducts() async {
     final response = await http.get(Uri.parse('$_url.json'));
 
@@ -126,7 +127,7 @@ class ProductsList with ChangeNotifier {
     }
   }
 
-  //
+  // ----------- DELETAR PRODUTO -------------------
   Future<bool> deleteProduct({required String productID}) async {
     final index = _items.indexWhere((prod) => prod.id == productID);
 
