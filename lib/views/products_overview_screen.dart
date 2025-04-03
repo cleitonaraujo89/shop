@@ -32,7 +32,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         _isLoading = false;
       });
     }).catchError((e) {
-      Alert(
+      alert(
           context: context,
           title: 'Oops algo deu errado!',
           content: 'Por favor tente novamente. ${e.toString()}');

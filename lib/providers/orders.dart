@@ -30,6 +30,7 @@ class Orders with ChangeNotifier {
     return _orders.length;
   }
 
+  //  --------------- ADIÇÃO DE PEDIDOS -------------
   Future<void> addOrder(Cart cart) async {
     final date = DateTime.now();
 
@@ -37,6 +38,7 @@ class Orders with ChangeNotifier {
       Uri.parse('$_urlOrders.json'),
       body: json.encode({
         'total': cart.totalAmout,
+        //deste modo fica melhor para formatar depois
         'date': date.toIso8601String(),
         'products': cart.items.values
             .map((cartItem) => {
@@ -73,5 +75,48 @@ class Orders with ChangeNotifier {
       notifyListeners();
       throw Exception();
     }
+  }
+
+  //  ----------- CARREGAR PEDIDOS -----------
+  Future<void> loadOrders() async {
+    final response = await http.get(Uri.parse('$_urlOrders.json'));
+
+    if (response.statusCode >= 400) {
+      throw Exception('Erro ao receber dados: ${response.body}');
+    }
+
+    //se n tiver produtos... return
+    if (response.body.isEmpty || response.body == "null") {
+      return;
+    }
+
+    Map<String, dynamic> data = jsonDecode(response.body);
+
+    _orders.clear();
+
+    data.forEach((orderId, orderData) {
+
+      _orders.insert(
+        0,
+        Order(
+          id: orderId,
+          total: orderData['total'],
+          date: DateTime.parse(orderData['date']),
+          //Em Order products é uma lista <CartItem>
+          products: (orderData['products'] as List<dynamic>).map((item) {
+            return CartItem(
+              id: item['id'],
+              productId: item['productId'],
+              title: item['title'],
+              quantity: item['quantity'],
+              price: item['price'],
+              imageUrl: item['imageUrl'],
+            );
+          }).toList(),
+        ),
+      );
+    });
+    notifyListeners();
+    return Future.value();
   }
 }

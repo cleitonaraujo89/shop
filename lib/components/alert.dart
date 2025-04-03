@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Future<void> Alert(
+Future<void> alert(
     {required BuildContext context,
     required String title,
     required String content}) async {

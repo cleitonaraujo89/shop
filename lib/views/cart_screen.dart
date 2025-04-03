@@ -105,7 +105,7 @@ class _OrderButtonState extends State<OrderButton> {
 
                 widget.cart.clear();
               } catch (e) {
-                Alert(
+                alert(
                     context: context,
                     title: 'Oops',
                     content: 'Algo deu errado, tente novamente');
