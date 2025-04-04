@@ -32,6 +32,7 @@ class AuthScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
+                  margin: EdgeInsets.only(bottom: 20),
                   padding: EdgeInsets.symmetric(vertical: 8, horizontal: 80),
                   //deixa o conteiner um pouco na vertical, utiliza o operador de cascata (..)
                   transform: Matrix4.rotationZ(-8 * pi / 180)..translate(-10.0),
