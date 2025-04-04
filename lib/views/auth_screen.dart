@@ -53,7 +53,8 @@ class AuthScreen extends StatelessWidget {
                         fontFamily: 'Anton'),
                   ),
                 ),
-                AuthCard(),
+                AnimatedSize(
+                    duration: Duration(milliseconds: 500), child: AuthCard()),
               ],
             ),
           ),
