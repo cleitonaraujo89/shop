@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names, prefer_const_constructors, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:shop/exceptions/firebase_exceptions.dart';
 import '../components/alert.dart';
 import '../utils/validator_forms.dart';
 import 'package:provider/provider.dart';
@@ -51,11 +52,17 @@ class _AuthCardState extends State<AuthCard> {
         await auth.signup(
             _authData['email'] as String, _authData['password'] as String);
       }
+    } on FirebaseExceptions catch (e) {
+      alert(
+        context: context,
+        title: 'Oops!',
+        content: e.toString(),
+      );
     } catch (e) {
       alert(
         context: context,
         title: 'Oops!',
-        content: e.toString().replaceFirst("Exception: ", ""),
+        content: 'Algo deu errado =/',
       );
     }
 

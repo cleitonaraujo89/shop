@@ -1,7 +1,10 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../config/firebase_config.dart';
+import '../exceptions/firebase_exceptions.dart';
 
 class Auth with ChangeNotifier {
   static const _urlNewUser = FirebaseConfig.urlNewUsers;
@@ -18,24 +21,15 @@ class Auth with ChangeNotifier {
     );
 
     if (response.statusCode >= 400) {
-      final Map<String, dynamic> responseData = jsonDecode(response.body);
-      final String errorMensage = responseData['error']['message'];
-
-      if (errorMensage.startsWith('INVALID')) {
-        throw Exception('Email Inválido');
+      final responseData = jsonDecode(response.body);
+      final String? errorMessage = responseData['error']['message'];
+      final errorCode = errorMessage?.split(' : ').first;
+      if (errorCode != null) {
+        throw FirebaseExceptions(errorCode);
       }
 
-      if (errorMensage.startsWith('EMAIL')) {
-        throw Exception('Email Já Cadastrado');
-      }
-
-      if (errorMensage.startsWith('TOO')) {
-        throw Exception('Numero de tentativas exedidas, tente mais tarde.');
-      }
-
-      throw Exception('Erro ao enviar os dados');
+      throw const FirebaseExceptions('Undifined');
     }
-
     return Future.value();
   }
 
@@ -51,25 +45,13 @@ class Auth with ChangeNotifier {
 
     if (response.statusCode >= 400) {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
-      final String errorMensage = responseData['error']['message'];
-      print(responseData);
-      if (errorMensage.startsWith('INVALID')) {
-        throw Exception('Senha incorreta');
+      final String? errorMessage = responseData['error']['message'];
+      final errorCode = errorMessage?.split(' : ').first;
+      if (errorCode != null) {
+        throw FirebaseExceptions(errorCode);
       }
 
-      if (errorMensage.startsWith('EMAIL')) {
-        throw Exception('Email não cadastrado');
-      }
-
-      if (errorMensage.startsWith('TOO')) {
-        throw Exception('Numero de tentativas exedidas, tente mais tarde.');
-      }
-
-      if (errorMensage.startsWith('USER')) {
-        throw Exception('Usuário Desativado!');
-      }
-
-      throw Exception('Erro ao enviar os dados');
+      throw const FirebaseExceptions('Undifined');
     }
 
     return Future.value();
