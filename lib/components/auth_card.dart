@@ -1,7 +1,10 @@
-// ignore_for_file: constant_identifier_names, prefer_const_constructors
+// ignore_for_file: constant_identifier_names, prefer_const_constructors, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import '../components/alert.dart';
 import '../utils/validator_forms.dart';
+import 'package:provider/provider.dart';
+import '../providers/auth.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -24,7 +27,7 @@ class _AuthCardState extends State<AuthCard> {
 
   String _textAdp = '';
 
-  void _submit() {
+  Future<void> _submit() async {
     //checa a validação e se for falsa retorna
     if (_form.currentState != null && !_form.currentState!.validate()) {
       return;
@@ -38,11 +41,27 @@ class _AuthCardState extends State<AuthCard> {
     //ativa todos os onSaved do Form
     _form.currentState!.save();
 
-    if (_authMode == AuthMode.Login) {
-      //login
-    } else {
-      //registro
+    final Auth auth = Provider.of<Auth>(context, listen: false);
+
+    try {
+      if (_authMode == AuthMode.Login) {
+        await auth.login(
+            _authData['email'] as String, _authData['password'] as String);
+      } else {
+        await auth.signup(
+            _authData['email'] as String, _authData['password'] as String);
+      }
+    } catch (e) {
+      alert(
+        context: context,
+        title: 'Oops!',
+        content: e.toString().replaceFirst("Exception: ", ""),
+      );
     }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override

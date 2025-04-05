@@ -8,7 +8,10 @@ Future<void> alert(
     context: context,
     builder: (ctx) => AlertDialog(
       title: Center(child: Text(title)),
-      content: Text(content),
+      content: Text(
+        content,
+        textAlign: TextAlign.center,
+      ),
       actions: [
         //como a função é await vai esperar o click do usuário para fechar o Dialog
         TextButton(
