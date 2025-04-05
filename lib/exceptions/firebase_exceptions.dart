@@ -2,6 +2,7 @@ class FirebaseExceptions implements Exception {
   const FirebaseExceptions(this.key);
   final String key;
 
+  //alguns erros sofreram alterações e n oram alterados na documentação do FB
   static const Map<String, String> errors = {
     'EMAIL_EXISTS': 'Email Já Cadastrado',
     'OPERATION_NOT_ALLOWED':
