@@ -52,7 +52,7 @@ class Auth with ChangeNotifier {
     if (response.statusCode >= 400) {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
       final String errorMensage = responseData['error']['message'];
-
+      print(responseData);
       if (errorMensage.startsWith('INVALID')) {
         throw Exception('Senha incorreta');
       }
