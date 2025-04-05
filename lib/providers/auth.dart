@@ -19,7 +19,9 @@ class Auth with ChangeNotifier {
 
   //verifica se há token, data de expiração e se a data retornada esta depois do momento que é checado
   String? get token {
-    if (_token != null && _expiryDate != null && _expiryDate!.isAfter(DateTime.now())) {
+    if (_token != null &&
+        _expiryDate != null &&
+        _expiryDate!.isAfter(DateTime.now())) {
       return _token!;
     } else {
       return null;
@@ -82,7 +84,7 @@ class Auth with ChangeNotifier {
         seconds: int.parse(responseBody['expiresIn']),
       ),
     );
-
+    notifyListeners();
     return Future.value();
   }
 }

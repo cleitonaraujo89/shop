@@ -17,7 +17,7 @@ class AuthCard extends StatefulWidget {
 }
 
 class _AuthCardState extends State<AuthCard> {
-  GlobalKey<FormState> _form = GlobalKey();
+  final GlobalKey<FormState> _form = GlobalKey();
   bool _isLoading = false;
   AuthMode _authMode = AuthMode.Login;
   final _passwordController = TextEditingController();

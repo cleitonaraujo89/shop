@@ -3,20 +3,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'utils/app_routes.dart';
+import './utils/app_routes.dart';
 
 import './providers/cart.dart';
-import 'package:shop/providers/orders.dart';
-import 'providers/products_list.dart';
+import './providers/orders.dart';
+import './providers/products_list.dart';
 import './providers/auth.dart';
 
-import './views/auth_screen.dart';
-import 'package:shop/views/cart_screen.dart';
-import 'views/products_overview_screen.dart';
+import './views/cart_screen.dart';
 import './views/product_detail_screen.dart';
 import './views/orders_screen.dart';
-import 'views/products_management_screen.dart';
+import './views/products_management_screen.dart';
 import './views/product_form_screen.dart';
+import './views/auth_home_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -49,9 +48,9 @@ class MyApp extends StatelessWidget {
             ),
             fontFamily: 'Lato',
             textTheme: TextTheme(titleLarge: TextStyle())),
-        home: AuthScreen(),
+        //home: AuthScreen(),
         routes: {
-          AppRoutes.HOME: (ctx) => ProductsOverviewScreen(),
+          AppRoutes.AUTH_HOME: (ctx) => AuthOrHomeScreen(),
           AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailScreen(),
           AppRoutes.CART: (ctx) => CartScreen(),
           AppRoutes.ORDERS: (ctx) => OrdersScreen(),
