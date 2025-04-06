@@ -23,18 +23,29 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
+      //existe uma hierarquia nos providers, funciona de acordo com a ordem de declaração
       providers: [
         ChangeNotifierProvider(
-          create: (_) => ProductsList(),
+          create: (_) => Auth(),
+        ),
+        //passa os dados de um provider para o outro
+        ChangeNotifierProxyProvider<Auth, ProductsList>(
+          //cria o provider ProductsList que depende de Auth, sempre q Auth mudar
+          //ProductsList sera atualizado, abaixo criamos a instancia incial de PL
+          create: (_) => ProductsList(null, []),
+          //essa função abaixo sempre é chamada quando Auth Atualiza
+          //resumindo a gente cria PL vazia, e atualiza passando o token
+          //prpreviousProducts é a instância anterior de ProductsList (ou null se )
+          update: (ctx, auth, previousProducts) => ProductsList(
+            auth.token,
+            previousProducts?.items ?? [],
+          ),
         ),
         ChangeNotifierProvider(
           create: (_) => Cart(),
         ),
         ChangeNotifierProvider(
           create: (_) => Orders(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => Auth(),
         ),
       ],
       child: MaterialApp(

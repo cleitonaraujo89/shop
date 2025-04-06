@@ -1,4 +1,6 @@
 //   https://cdn.pixabay.com/photo/2019/06/30/21/08/balloon-4308798_640.png
+// ignore_for_file: prefer_final_fields
+
 import 'dart:convert';
 import 'dart:math';
 
@@ -9,7 +11,10 @@ import 'product.dart';
 import '../config/firebase_config.dart';
 
 class ProductsList with ChangeNotifier {
-  final List<Product> _items = [];
+  ProductsList(this._token, this._items);
+
+  final String? _token;
+  final List<Product> _items;
   final String _url = FirebaseConfig.urlProducts;
 
   List<Product> get items {
@@ -26,7 +31,8 @@ class ProductsList with ChangeNotifier {
 
   // ---------------- CARREGA A LISTA DE PRODUTOS -----------
   Future<void> loadProducts() async {
-    final response = await http.get(Uri.parse('$_url.json'));
+    //url com o token de identificação
+    final response = await http.get(Uri.parse('$_url.json?auth=$_token'));
 
     if (response.statusCode >= 400) {
       throw Exception('Erro ao receber dados: ${response.body}');
