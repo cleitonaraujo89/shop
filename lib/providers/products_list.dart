@@ -74,7 +74,7 @@ class ProductsList with ChangeNotifier {
     }
 
     try {
-      final response = await http.post(Uri.parse('$_url.json'),
+      final response = await http.post(Uri.parse('$_url.json?auth=$_token'),
           body: json.encode({
             'title': newProduct.title,
             'price': newProduct.price,
@@ -119,7 +119,7 @@ class ProductsList with ChangeNotifier {
 
     if (index >= 0) {
       await http.patch(
-        Uri.parse("$_url/${updatedProduct.id}.json"),
+        Uri.parse("$_url/${updatedProduct.id}.json?auth=$_token"),
         body: json.encode({
           'title': updatedProduct.title,
           'price': updatedProduct.price,
@@ -138,7 +138,8 @@ class ProductsList with ChangeNotifier {
     final index = _items.indexWhere((prod) => prod.id == productID);
 
     if (index >= 0) {
-      final response = await http.delete(Uri.parse("$_url/$productID.json"));
+      final response =
+          await http.delete(Uri.parse("$_url/$productID.json?auth=$_token"));
 
       if (response.statusCode >= 400) {
         return false;

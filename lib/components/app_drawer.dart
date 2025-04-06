@@ -27,7 +27,7 @@ class AppDrawer extends StatelessWidget {
             ),
             title: const Text('Loja'),
             onTap: () {
-              Navigator.of(context).pushReplacementNamed(AppRoutes.HOME);
+              Navigator.of(context).pushReplacementNamed(AppRoutes.AUTH_HOME);
             },
           ),
           const Divider(

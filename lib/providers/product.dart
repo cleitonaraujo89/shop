@@ -21,13 +21,14 @@ class Product with ChangeNotifier {
       this.isFavorite = false});
 
   //altera o estado de favorito do produto e notifica os ouvintes
-  Future<void> toggleFavorite() async {
+  Future<void> toggleFavorite(String token) async {
     isFavorite = !isFavorite;
     notifyListeners();
+    
 
     try {
       final response = await http.patch(
-        Uri.parse('${FirebaseConfig.urlProducts}/$id.json'),
+        Uri.parse('${FirebaseConfig.urlProducts}/$id.json?auth=$token'),
         body: json.encode({
           'isFavorite': isFavorite,
         }),

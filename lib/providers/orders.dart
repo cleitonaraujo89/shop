@@ -19,8 +19,12 @@ class Order {
 }
 
 class Orders with ChangeNotifier {
+
+  Orders(this._token, this._orders);
+
+  final String? _token;
   final String _urlOrders = FirebaseConfig.urlOrders;
-  final List<Order> _orders = [];
+  final List<Order> _orders;
 
   List<Order> get getOrders {
     return [..._orders];
@@ -35,7 +39,7 @@ class Orders with ChangeNotifier {
     final date = DateTime.now();
 
     final responseAdd = await http.post(
-      Uri.parse('$_urlOrders.json'),
+      Uri.parse('$_urlOrders.json?auth=$_token'),
       body: json.encode({
         'total': cart.totalAmout,
         //deste modo fica melhor para formatar depois
@@ -66,7 +70,7 @@ class Orders with ChangeNotifier {
     notifyListeners();
 
     final responseUpdt = await http.patch(
-      Uri.parse('$_urlOrders/$idDB.json'),
+      Uri.parse('$_urlOrders/$idDB.json?auth=$_token'),
       body: jsonEncode({'id': idDB}),
     );
 
@@ -79,7 +83,7 @@ class Orders with ChangeNotifier {
 
   //  ----------- CARREGAR PEDIDOS -----------
   Future<void> loadOrders() async {
-    final response = await http.get(Uri.parse('$_urlOrders.json'));
+    final response = await http.get(Uri.parse('$_urlOrders.json?auth=$_token'));
 
     if (response.statusCode >= 400) {
       throw Exception('Erro ao receber dados: ${response.body}');
