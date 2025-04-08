@@ -44,7 +44,7 @@ class ProductGridItem extends StatelessWidget {
               onPressed: () async {
                 //ao mudar o estado do favorito altera o icone
                 try {
-                  await productConsumer.toggleFavorite(auth.token ?? '');
+                  await productConsumer.toggleFavorite(auth.token ?? '', auth.userId ?? '');
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(

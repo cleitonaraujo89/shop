@@ -11,9 +11,10 @@ import 'product.dart';
 import '../config/firebase_config.dart';
 
 class ProductsList with ChangeNotifier {
-  ProductsList(this._token, this._items);
+  ProductsList([this._token, this._items = const [], this._userId]);
 
   final String? _token;
+  final String? _userId;
   final List<Product> _items;
   final String _url = FirebaseConfig.urlProducts;
 
@@ -33,9 +34,15 @@ class ProductsList with ChangeNotifier {
   Future<void> loadProducts() async {
     //url com o token de identificação
     final response = await http.get(Uri.parse('$_url.json?auth=$_token'));
+    final responseFavorite = await http.get(Uri.parse(
+        '${FirebaseConfig.userFavorites}/$_userId.json?auth=$_token'));
 
-    if (response.statusCode >= 400) {
-      throw Exception('Erro ao receber dados: ${response.body}');
+    final Map<String, dynamic>? favData = jsonDecode(responseFavorite.body);
+
+    final Map<String, dynamic> data = jsonDecode(response.body);
+
+    if (response.statusCode >= 400 || responseFavorite.statusCode >= 400) {
+      throw Exception('Erro ao receber os dados');
     }
 
     //se n tiver produtos... return
@@ -43,20 +50,22 @@ class ProductsList with ChangeNotifier {
       return;
     }
 
-    Map<String, dynamic> data = jsonDecode(response.body);
-
     //limpa a lista para que não haja duplicação da lista toda vez que carregar a pagina.
     _items.clear();
 
-    //para cada item em data vai pegar o is e os dados do produto (key, value) e adicionar a lista de produtos
+    //para cada item em data vai pegar o id e os dados do produto (key, value) e adicionar a lista de produtos
     data.forEach((productId, productData) {
+      // se for testa se for null (false) depois pega o valor da chave (caso n tenha false)
+      final bool isFavorite =
+          favData == null ? false : favData[productId] ?? false;
+
       _items.add(Product(
         id: productId,
         title: productData['title'],
         price: productData['price'],
         description: productData['description'],
         imageUrl: productData['imageUrl'],
-        isFavorite: productData['isFavorite'],
+        isFavorite: isFavorite,
       ));
     });
 
@@ -80,7 +89,6 @@ class ProductsList with ChangeNotifier {
             'price': newProduct.price,
             'description': newProduct.description,
             'imageUrl': newProduct.imageUrl,
-            'isFavorite': newProduct.isFavorite,
           }));
 
       if (response.statusCode >= 400) {

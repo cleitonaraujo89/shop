@@ -32,6 +32,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         _isLoading = false;
       });
     }).catchError((e) {
+      print(e.toString());
       alert(
           context: context,
           title: 'Oops algo deu errado!',

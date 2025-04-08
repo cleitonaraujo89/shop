@@ -32,13 +32,15 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProxyProvider<Auth, ProductsList>(
           //cria o provider ProductsList que depende de Auth, sempre q Auth mudar
           //ProductsList sera atualizado, abaixo criamos a instancia incial de PL
-          create: (_) => ProductsList(null, []),
+          //vazia pois o construtor de PL esta com os atributos opcionais '[]'
+          create: (_) => ProductsList(),
           //essa função abaixo sempre é chamada quando Auth Atualiza
           //resumindo a gente cria PL vazia, e atualiza passando o token
           //previousProducts é a instância anterior de ProductsList (ou null se n tiver)
           update: (ctx, auth, previousProducts) => ProductsList(
             auth.token,
             previousProducts?.items ?? [],
+            auth.userId
           ),
         ),
         ChangeNotifierProvider(

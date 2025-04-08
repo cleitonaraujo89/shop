@@ -9,12 +9,17 @@ import '../exceptions/firebase_exceptions.dart';
 class Auth with ChangeNotifier {
   static const _urlNewUser = FirebaseConfig.urlNewUsers;
   static const _urlLogin = FirebaseConfig.urlLogin;
+  String? _userId;
   String? _token;
   DateTime? _expiryDate;
 
   //chama o get token e retorna true ou false
   bool get isAuth {
     return token != null;
+  }
+
+  String? get userId {
+    return isAuth ? _userId : null;
   }
 
   //verifica se há token, data de expiração e se a data retornada esta depois do momento que é checado
@@ -77,6 +82,7 @@ class Auth with ChangeNotifier {
     final responseBody = jsonDecode(response.body);
 
     _token = responseBody['idToken'];
+    _userId = responseBody['localId'];
 
     //Pega a data de agora e adiciona o tempo de expiração
     _expiryDate = DateTime.now().add(
