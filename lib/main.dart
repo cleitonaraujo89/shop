@@ -38,18 +38,19 @@ class MyApp extends StatelessWidget {
           //resumindo a gente cria PL vazia, e atualiza passando o token
           //previousProducts é a instância anterior de ProductsList (ou null se n tiver)
           update: (ctx, auth, previousProducts) => ProductsList(
-            auth.token,
-            previousProducts?.items ?? [],
-            auth.userId
-          ),
+              auth.token, previousProducts?.items ?? [], auth.userId),
         ),
         ChangeNotifierProvider(
           create: (_) => Cart(),
         ),
         ChangeNotifierProxyProvider<Auth, Orders>(
-          create: (_) => Orders(null, []),
-          update: (context, auth, previousOrders) =>
-              Orders(auth.token, previousOrders?.getOrders ?? []),
+          //quando não deixamos como os atributos como opcionais...
+          create: (_) => Orders(null, [], null),
+          update: (context, auth, previousOrders) => Orders(
+            auth.token,
+            previousOrders?.getOrders ?? [],
+            auth.userId
+          ),
         ),
       ],
       child: MaterialApp(
