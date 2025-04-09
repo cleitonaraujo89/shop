@@ -93,4 +93,12 @@ class Auth with ChangeNotifier {
     notifyListeners();
     return Future.value();
   }
+
+  // ------------ LOGOUT --------------
+  void logout(){
+    _token = null;
+    _userId = null;
+    _expiryDate = null;
+    notifyListeners();
+  }
 }
