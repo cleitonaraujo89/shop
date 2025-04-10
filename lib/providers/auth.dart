@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../config/firebase_config.dart';
 import '../exceptions/firebase_exceptions.dart';
+import '../data/store.dart';
 
 class Auth with ChangeNotifier {
   static const _urlNewUser = FirebaseConfig.urlNewUsers;
@@ -65,6 +66,8 @@ class Auth with ChangeNotifier {
 
   // ------------ LOGIN --------------
   Future<void> login(String email, String password) async {
+
+    //envia os dados e aguarda a resposta
     final response = await http.post(
       Uri.parse(_urlLogin),
       body: jsonEncode({
@@ -86,8 +89,10 @@ class Auth with ChangeNotifier {
       throw const FirebaseExceptions('Undifined');
     }
 
+    //sem erros, começamos a trabalhar com os dados recebidos
     final responseBody = jsonDecode(response.body);
 
+    //atribui o id, token e a validade do token
     _token = responseBody['idToken'];
     _userId = responseBody['localId'];
 
@@ -98,9 +103,47 @@ class Auth with ChangeNotifier {
         seconds: int.parse(responseBody['expiresIn']),
       ),
     );
+
+    //salva localmente (aparelho do usuario) as informaçoes
+    Store.saveMap('userData', {
+      'token': _token,
+      'userId': _userId,
+      'expiryDate': _expiryDate!.toIso8601String(),
+      
+    });
+
     //começa a contar o tempo de validade do token
     autoLogout();
 
+    notifyListeners();
+    return Future.value();
+  }
+
+  //  ----------- AUTO-LOGIN ------------
+  // essa função evita q o usuário tenha que fazer varios logins
+  // se o token ainda estiver válido ele vai entrar direto no app
+  Future<void> tryAutoLogin() async{
+    //se já tiver logado, retorna
+    if (isAuth) {
+      return Future.value();
+    }
+
+    //pega os dados locais
+    final userData = await Store.getMap('userData');
+    //checa se há dados
+    if (userData == null) return Future.value();
+    
+    final expiryDate = DateTime.parse(userData['expiryDate']);
+    //se a data de expiração do token for antes... retorna
+    if (expiryDate.isBefore(DateTime.now())) {
+      return Future.value();
+    }
+
+    _token = userData['token'];
+    _userId = userData['userId'];
+    _expiryDate = expiryDate;
+
+    autoLogout();
     notifyListeners();
     return Future.value();
   }
@@ -115,6 +158,8 @@ class Auth with ChangeNotifier {
       _logoutTimer!.cancel();
       _logoutTimer = null;
     }
+
+    Store.remove('userData');
     notifyListeners();
   }
 

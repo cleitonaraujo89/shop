@@ -2,14 +2,14 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Store {
-  static Future<void> savedString(String key, String value) async {
+  static Future<void> saveString(String key, String value) async {
     final prefs = await SharedPreferences.getInstance();
 
     prefs.setString(key, value);
   }
 
-  static Future<void> savedMap(String key, Map<String, dynamic> value) async {
-    await savedString(key, jsonEncode(value));
+  static Future<void> saveMap(String key, Map<String, dynamic> value) async {
+    await saveString(key, jsonEncode(value));
   }
 
   static Future<String?> getString(String key) async {
@@ -32,5 +32,11 @@ class Store {
     } catch (e) {
       return null;
     }    
+  }
+
+  static Future<bool?> remove(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    return prefs.remove(key);
   }
 }

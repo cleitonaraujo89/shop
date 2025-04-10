@@ -35,7 +35,18 @@ class AuthOrHomeScreen extends StatelessWidget {
       });
     }
 
-    //chama o get pra saber se o usuario ta logado ou não
-    return auth.isAuth ? ProductsOverviewScreen() : const AuthScreen();
+    return FutureBuilder(
+        future: auth.tryAutoLogin(),
+        builder: (ctx, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator.adaptive());
+          } else if (snapshot.error != null) {
+            return const Center(child: Text('Ocorreu um erro =/'));
+          } else {
+            //chama o get pra saber se o usuario ta logado ou não
+            return auth.isAuth ? ProductsOverviewScreen() : const AuthScreen();
+          }
+        });
+    //return auth.isAuth ? ProductsOverviewScreen() : const AuthScreen();
   }
 }
