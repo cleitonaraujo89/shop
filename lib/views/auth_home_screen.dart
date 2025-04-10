@@ -10,8 +10,31 @@ class AuthOrHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //pega o provider
     Auth auth = Provider.of(context);
+
+    //chama o get pra saber se há uma sessão expirada
+    if (auth.expiredToken) {
+      // Adia a execução da função até o fim da contrução da tela
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text(
+              'Sua sessão expirou, entre novamente!',
+              style: TextStyle(fontSize: 18),
+            ),
+            action: SnackBarAction(
+              label: 'OK',
+              onPressed: () =>
+                  ScaffoldMessenger.of(context).removeCurrentSnackBar(),
+            ),
+            duration: const Duration(seconds: 600),
+          ),
+        );
+        //reseta a expired para false
+        auth.expired();
+      });
+    }
+
     //chama o get pra saber se o usuario ta logado ou não
     return auth.isAuth ? ProductsOverviewScreen() : const AuthScreen();
   }

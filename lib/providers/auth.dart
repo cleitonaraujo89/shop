@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -12,11 +13,15 @@ class Auth with ChangeNotifier {
   String? _userId;
   String? _token;
   DateTime? _expiryDate;
+  Timer? _logoutTimer;
+  bool _expiredToken = false;
 
   //chama o get token e retorna true ou false
   bool get isAuth {
     return token != null;
   }
+
+  bool get expiredToken => _expiredToken;
 
   String? get userId {
     return isAuth ? _userId : null;
@@ -69,6 +74,8 @@ class Auth with ChangeNotifier {
       }),
     );
 
+    //se tiver algum erro separa a msg retornada pelo firebase e lança
+    //a exception personalizada
     if (response.statusCode >= 400) {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
       final String? errorMessage = responseData['error']['message'];
@@ -85,20 +92,50 @@ class Auth with ChangeNotifier {
     _userId = responseBody['localId'];
 
     //Pega a data de agora e adiciona o tempo de expiração
+    //(obs. metodo utilizado apenas para mostrar o uso dode algumas funções do Date.time)
     _expiryDate = DateTime.now().add(
       Duration(
         seconds: int.parse(responseBody['expiresIn']),
       ),
     );
+    //começa a contar o tempo de validade do token
+    autoLogout();
+
     notifyListeners();
     return Future.value();
   }
 
   // ------------ LOGOUT --------------
-  void logout(){
+  void logout() {
     _token = null;
     _userId = null;
     _expiryDate = null;
+
+    if (_logoutTimer != null) {
+      _logoutTimer!.cancel();
+      _logoutTimer = null;
+    }
     notifyListeners();
+  }
+
+  // ------------ AUTO LOGOUT --------------
+  void expired() {
+    _expiredToken = !_expiredToken;
+
+    if (_token != null) {
+      logout();
+    }
+  }
+
+  void autoLogout() {
+    //se existir um timer ele cancela e abre um novo
+    if (_logoutTimer != null) {
+      _logoutTimer!.cancel();
+    }
+
+    //pega a diferença em segundos
+    // (obs. metodo utilizado apenas para mostrar o uso dode algumas funções do Date.time)
+    final timeToLogout = _expiryDate!.difference(DateTime.now()).inSeconds;
+    _logoutTimer = Timer(Duration(seconds: timeToLogout), expired);
   }
 }

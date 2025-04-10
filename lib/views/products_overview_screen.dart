@@ -32,7 +32,6 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         _isLoading = false;
       });
     }).catchError((e) {
-      print(e.toString());
       alert(
           context: context,
           title: 'Oops algo deu errado!',
@@ -42,9 +41,6 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //final ProductsProvider products = Provider.of(context);
-    //final Cart cart = Provider.of<Cart>(context);
-
     return BaseScaffold(
       title: 'Minha Loja',
       action: [
