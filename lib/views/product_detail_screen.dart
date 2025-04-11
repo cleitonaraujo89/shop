@@ -23,9 +23,14 @@ class ProductDetailScreen extends StatelessWidget {
             SizedBox(
               height: 300,
               width: double.infinity,
-              child: Image.network(
-                product.imageUrl,
-                fit: BoxFit.cover,
+              //o Hero é um efeito de animação, na tag temos q por algo semelhante
+              //na imagem de origem e de destino (aqui e no product_grid_item)
+              child: Hero(
+                tag: product.id!,
+                child: Image.network(
+                  product.imageUrl,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             SizedBox(height: 10),

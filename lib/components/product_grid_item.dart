@@ -28,11 +28,16 @@ class ProductGridItem extends StatelessWidget {
               arguments: product,
             );
           },
-          child: FadeInImage(
-            placeholder:
-                AssetImage('assets/images/8.1 product-placeholder.png'),
-            image: NetworkImage(product.imageUrl),
-            fit: BoxFit.cover,
+          //o Hero é um efeito de animação, na tag temos q por algo semelhante
+          //na imagem de origem e de destino (aqui e na product_detal_screen)
+          child: Hero(
+            tag: product.id!,
+            child: FadeInImage(
+              placeholder:
+                  AssetImage('assets/images/8.1 product-placeholder.png'),
+              image: NetworkImage(product.imageUrl),
+              fit: BoxFit.cover,
+            ),
           ),
         ),
         footer: GridTileBar(
