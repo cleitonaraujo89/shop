@@ -28,8 +28,10 @@ class ProductGridItem extends StatelessWidget {
               arguments: product,
             );
           },
-          child: Image.network(
-            product.imageUrl,
+          child: FadeInImage(
+            placeholder:
+                AssetImage('assets/images/8.1 product-placeholder.png'),
+            image: NetworkImage(product.imageUrl),
             fit: BoxFit.cover,
           ),
         ),
@@ -44,7 +46,8 @@ class ProductGridItem extends StatelessWidget {
               onPressed: () async {
                 //ao mudar o estado do favorito altera o icone
                 try {
-                  await productConsumer.toggleFavorite(auth.token ?? '', auth.userId ?? '');
+                  await productConsumer.toggleFavorite(
+                      auth.token ?? '', auth.userId ?? '');
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
