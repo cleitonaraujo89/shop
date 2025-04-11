@@ -44,7 +44,7 @@ class AuthOrHomeScreen extends StatelessWidget {
             return const Center(child: Text('Ocorreu um erro =/'));
           } else {
             //chama o get pra saber se o usuario ta logado ou não
-            return auth.isAuth ? ProductsOverviewScreen() : const AuthScreen();
+            return auth.isAuth ? ProductsOverviewScreen() : AuthScreen();
           }
         });
     //return auth.isAuth ? ProductsOverviewScreen() : const AuthScreen();

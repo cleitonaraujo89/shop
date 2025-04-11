@@ -16,11 +16,43 @@ class AuthCard extends StatefulWidget {
   State<AuthCard> createState() => _AuthCardState();
 }
 
-class _AuthCardState extends State<AuthCard> {
+class _AuthCardState extends State<AuthCard>
+    with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _form = GlobalKey();
   bool _isLoading = false;
   AuthMode _authMode = AuthMode.Login;
   final _passwordController = TextEditingController();
+
+  late AnimationController _controller;
+  late Animation<double> _opacityAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    //ativa um controler baseado em cada frame atualizado na tela pelo vsync
+    // isso é possivel pois esta classe tem o SingleTickerProviderStateMixin
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500),
+    );
+
+    _opacityAnimation = Tween(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.linear),
+    );
+  }
+
+  //fechamos os controlers quando o widget for descartado
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+    _passwordController.dispose();
+  }
+
   final Map<String, String> _authData = {
     'email': '',
     'password': '',
@@ -87,33 +119,45 @@ class _AuthCardState extends State<AuthCard> {
       ),
       child: Container(
         width: deviceSize.width * 0.75,
+        //height: _heightAnimation!.value.height, // método de animação antigo
         padding: EdgeInsets.all(16),
         child: Form(
-            key: _form,
-            child: Column(
-              children: [
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'E-mail'),
-                  keyboardType: TextInputType.emailAddress,
-                  initialValue: '',
-                  validator: (value) =>
-                      validadeForms(submitedText: value!, email: true),
-                  onSaved: (value) => _authData['email'] = value!,
+          key: _form,
+          child: Column(
+            children: [
+              TextFormField(
+                decoration: InputDecoration(labelText: 'E-mail'),
+                keyboardType: TextInputType.emailAddress,
+                initialValue: '',
+                validator: (value) =>
+                    validadeForms(submitedText: value!, email: true),
+                onSaved: (value) => _authData['email'] = value!,
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Senha'),
+                controller: _passwordController,
+                obscureText: true,
+                validator: (value) => validadeForms(
+                  submitedText: value ?? '',
+                  specialCaracteres: true,
+                  uppercaseLetter: true,
+                  lenght: 5,
                 ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Senha'),
-                  controller: _passwordController,
-                  obscureText: true,
-                  validator: (value) => validadeForms(
-                    submitedText: value ?? '',
-                    specialCaracteres: true,
-                    uppercaseLetter: true,
-                    lenght: 5,
-                  ),
-                  onSaved: (newValue) => _authData['password'] = newValue!,
+                onSaved: (newValue) => _authData['password'] = newValue!,
+              ),
+              //if (_authMode == AuthMode.Signup) // nao precisa mais
+              AnimatedContainer(
+                duration: Duration(milliseconds: 500),
+                //altera o tamanho do conteiner sob a condicional
+                constraints: BoxConstraints(
+                  minHeight: _authMode == AuthMode.Signup ? 60 : 0,
+                  maxHeight: _authMode == AuthMode.Signup ? 120 : 0,
                 ),
-                if (_authMode == AuthMode.Signup)
-                  TextFormField(
+                curve: Curves.linear,
+                //altera a opacidade do elemnto
+                child: FadeTransition(
+                  opacity: _opacityAnimation,
+                  child: TextFormField(
                     decoration:
                         InputDecoration(labelText: 'Confirmação de Senha'),
                     initialValue: '',
@@ -124,11 +168,16 @@ class _AuthCardState extends State<AuthCard> {
                             equalityCheck: _passwordController.text)
                         : null,
                   ),
-                SizedBox(height: 20),
-                if (_isLoading)
-                  CircularProgressIndicator.adaptive()
-                else
-                  ElevatedButton(
+                ),
+              ),
+              SizedBox(height: 20),
+              if (_isLoading)
+                CircularProgressIndicator.adaptive()
+              else
+                AnimatedSize(
+                  duration: Duration(milliseconds: 400),
+                  curve: Curves.easeInOut,
+                  child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         backgroundColor:
                             const Color.fromARGB(255, 194, 77, 214),
@@ -141,27 +190,31 @@ class _AuthCardState extends State<AuthCard> {
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
-                SizedBox(height: 15),
-                Row(
-                  children: [
-                    Text('$_textAdp possui conta?  '),
-                    TextButton(
-                        onPressed: () {
-                          setState(() {
-                            if (_authMode == AuthMode.Login) {
-                              _authMode = AuthMode.Signup;
-                            } else {
-                              _authMode = AuthMode.Login;
-                            }
-                          });
-                        },
-                        child: _authMode == AuthMode.Login
-                            ? Text('Cadastre-se')
-                            : Text('Fazer Login')),
-                  ],
-                )
-              ],
-            )),
+                ),
+              SizedBox(height: 15),
+              Row(
+                children: [
+                  Text('$_textAdp possui conta?  '),
+                  TextButton(
+                      onPressed: () {
+                        setState(() {
+                          if (_authMode == AuthMode.Login) {
+                            _authMode = AuthMode.Signup;
+                            _controller.forward();
+                          } else {
+                            _authMode = AuthMode.Login;
+                            _controller.reverse();
+                          }
+                        });
+                      },
+                      child: _authMode == AuthMode.Login
+                          ? Text('Cadastre-se')
+                          : Text('Fazer Login')),
+                ],
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
