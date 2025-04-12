@@ -1,4 +1,4 @@
-// ignore_for_file: constant_identifier_names, prefer_const_constructors, use_build_context_synchronously
+// ignore_for_file: constant_identifier_names, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:shop/exceptions/firebase_exceptions.dart';
@@ -34,7 +34,7 @@ class _AuthCardState extends State<AuthCard>
     // isso é possivel pois esta classe tem o SingleTickerProviderStateMixin
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
     );
 
     _opacityAnimation = Tween(
@@ -120,13 +120,13 @@ class _AuthCardState extends State<AuthCard>
       child: Container(
         width: deviceSize.width * 0.75,
         //height: _heightAnimation!.value.height, // método de animação antigo
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Form(
           key: _form,
           child: Column(
             children: [
               TextFormField(
-                decoration: InputDecoration(labelText: 'E-mail'),
+                decoration: const InputDecoration(labelText: 'E-mail'),
                 keyboardType: TextInputType.emailAddress,
                 initialValue: '',
                 validator: (value) =>
@@ -134,7 +134,7 @@ class _AuthCardState extends State<AuthCard>
                 onSaved: (value) => _authData['email'] = value!,
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Senha'),
+                decoration: const InputDecoration(labelText: 'Senha'),
                 controller: _passwordController,
                 obscureText: true,
                 validator: (value) => validadeForms(
@@ -147,7 +147,7 @@ class _AuthCardState extends State<AuthCard>
               ),
               //if (_authMode == AuthMode.Signup) // nao precisa mais
               AnimatedContainer(
-                duration: Duration(milliseconds: 500),
+                duration: const Duration(milliseconds: 500),
                 //altera o tamanho do conteiner sob a condicional
                 constraints: BoxConstraints(
                   minHeight: _authMode == AuthMode.Signup ? 60 : 0,
@@ -159,7 +159,7 @@ class _AuthCardState extends State<AuthCard>
                   opacity: _opacityAnimation,
                   child: TextFormField(
                     decoration:
-                        InputDecoration(labelText: 'Confirmação de Senha'),
+                        const InputDecoration(labelText: 'Confirmação de Senha'),
                     initialValue: '',
                     obscureText: true,
                     validator: _authMode == AuthMode.Signup
@@ -170,12 +170,12 @@ class _AuthCardState extends State<AuthCard>
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               if (_isLoading)
-                CircularProgressIndicator.adaptive()
+                const CircularProgressIndicator.adaptive()
               else
                 AnimatedSize(
-                  duration: Duration(milliseconds: 400),
+                  duration: const Duration(milliseconds: 400),
                   curve: Curves.easeInOut,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -183,15 +183,15 @@ class _AuthCardState extends State<AuthCard>
                             const Color.fromARGB(255, 194, 77, 214),
                         foregroundColor: Colors.white,
                         padding:
-                            EdgeInsets.symmetric(horizontal: 30, vertical: 10)),
+                            const EdgeInsets.symmetric(horizontal: 30, vertical: 10)),
                     onPressed: _submit,
                     child: Text(
                       _authMode == AuthMode.Login ? 'ENTRAR' : 'REGISTRAR',
-                      style: TextStyle(fontSize: 16),
+                      style: const TextStyle(fontSize: 16),
                     ),
                   ),
                 ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               Row(
                 children: [
                   Text('$_textAdp possui conta?  '),
@@ -208,8 +208,8 @@ class _AuthCardState extends State<AuthCard>
                         });
                       },
                       child: _authMode == AuthMode.Login
-                          ? Text('Cadastre-se')
-                          : Text('Fazer Login')),
+                          ? const Text('Cadastre-se')
+                          : const Text('Fazer Login')),
                 ],
               )
             ],

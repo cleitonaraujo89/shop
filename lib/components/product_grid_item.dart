@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last, use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,25 +21,6 @@ class ProductGridItem extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
-        child: GestureDetector(
-          onTap: () {
-            Navigator.of(context).pushNamed(
-              AppRoutes.PRODUCT_DETAIL,
-              arguments: product,
-            );
-          },
-          //o Hero é um efeito de animação, na tag temos q por algo semelhante
-          //na imagem de origem e de destino (aqui e na product_detal_screen)
-          child: Hero(
-            tag: product.id!,
-            child: FadeInImage(
-              placeholder:
-                  AssetImage('assets/images/8.1 product-placeholder.png'),
-              image: NetworkImage(product.imageUrl),
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
         footer: GridTileBar(
           backgroundColor: Colors.black87,
 
@@ -55,7 +36,7 @@ class ProductGridItem extends StatelessWidget {
                       auth.token ?? '', auth.userId ?? '');
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                       content: Text(
                         'Erro ao Favoritar, tente novamente!',
                         style: TextStyle(fontSize: 18),
@@ -82,11 +63,11 @@ class ProductGridItem extends StatelessWidget {
               //depois abre uma SnackBar
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(
+                  content: const Text(
                     'Produto adicionado!',
                     style: TextStyle(fontSize: 18),
                   ),
-                  duration: Duration(seconds: 3),
+                  duration: const Duration(seconds: 3),
                   action: SnackBarAction(
                       label: 'DESFAZER',
                       onPressed: () {
@@ -96,8 +77,27 @@ class ProductGridItem extends StatelessWidget {
               );
               cart.addItem(product);
             },
-            icon: Icon(Icons.shopping_cart),
+            icon: const Icon(Icons.shopping_cart),
             color: Theme.of(context).colorScheme.secondary,
+          ),
+        ),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed(
+              AppRoutes.PRODUCT_DETAIL,
+              arguments: product,
+            );
+          },
+          //o Hero é um efeito de animação, na tag temos q por algo semelhante
+          //na imagem de origem e de destino (aqui e na product_detal_screen)
+          child: Hero(
+            tag: product.id!,
+            child: FadeInImage(
+              placeholder:
+                  const AssetImage('assets/images/8.1 product-placeholder.png'),
+              image: NetworkImage(product.imageUrl),
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       ),

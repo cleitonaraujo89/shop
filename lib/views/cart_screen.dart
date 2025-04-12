@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,17 +21,17 @@ class CartScreen extends StatelessWidget {
       body: Column(
         children: [
           Card(
-            margin: EdgeInsets.all(25),
+            margin: const EdgeInsets.all(25),
             child: Padding(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     'Total',
                     style: TextStyle(fontSize: 20),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   DecoratedBox(
@@ -52,13 +52,13 @@ class CartScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Spacer(), //cria um espaço entre os elementos
+                  const Spacer(), //cria um espaço entre os elementos
                   OrderButton(cart: cart)
                 ],
               ),
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Expanded(
             child: ListView.builder(
               itemCount: cartItems.length,
@@ -112,7 +112,7 @@ class _OrderButtonState extends State<OrderButton> {
               }
             },
       child:
-          _isLoading ? CircularProgressIndicator.adaptive() : Text('COMPRAR'),
+          _isLoading ? const CircularProgressIndicator.adaptive() : const Text('COMPRAR'),
     );
   }
 }

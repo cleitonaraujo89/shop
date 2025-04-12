@@ -16,7 +16,7 @@ class _OrderWidgetState extends State<OrderWidget> {
   @override
   Widget build(BuildContext context) {
     return AnimatedSize(
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       child: Card(
         margin: const EdgeInsets.all(10),
         child: Column(

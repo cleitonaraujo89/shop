@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_collection_literals, use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,7 +27,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   //variaveis para controller e valores oriundos do formulário
   final _imageUrlController = TextEditingController();
   final _form = GlobalKey<FormState>();
-  final _formData = Map<String, Object>();
+  final _formData = <String, Object>{};
   //variável para o displau de loading
   bool _isLoading = false;
 
@@ -117,10 +117,10 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     return BaseScaffold(
       title: 'Formulário Produto',
       action: [
-        IconButton(onPressed: _saveForm, icon: Icon(Icons.save)),
+        IconButton(onPressed: _saveForm, icon: const Icon(Icons.save)),
       ],
       body: _isLoading
-          ? Center(
+          ? const Center(
               //tela com o circulo de loading
               child: CircularProgressIndicator.adaptive(),
             )
@@ -180,7 +180,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                       focusNode: _priceFocusNode,
                       //teclado numérico
                       keyboardType:
-                          TextInputType.numberWithOptions(decimal: true),
+                          const TextInputType.numberWithOptions(decimal: true),
                       //limita casas decimais e outros caracteres
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(
@@ -255,7 +255,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                           //precisa de um espaço definido para mostrar o campo do formulário, por isso o expanded
                           child: TextFormField(
                             decoration:
-                                InputDecoration(labelText: 'URL da Imagem'),
+                                const InputDecoration(labelText: 'URL da Imagem'),
                             keyboardType: TextInputType.url,
                             //submet o formulário
                             textInputAction: TextInputAction.done,
@@ -282,7 +282,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                           //precisamos de um espaço definido para o FittedBox
                           height: 100,
                           width: 100,
-                          margin: EdgeInsets.only(top: 8, left: 10, right: 8),
+                          margin: const EdgeInsets.only(top: 8, left: 10, right: 8),
                           decoration: BoxDecoration(
                             border: Border.all(
                               color: Colors.grey,
@@ -292,10 +292,10 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                           ),
                           alignment: Alignment.center,
                           padding: _imageUrlController.text.isEmpty
-                              ? EdgeInsets.all(8)
-                              : EdgeInsets.all(0),
+                              ? const EdgeInsets.all(8)
+                              : const EdgeInsets.all(0),
                           child: _imageUrlController.text.isEmpty
-                              ? Text('Informe a URL')
+                              ? const Text('Informe a URL')
                               : Image.network(
                                   _imageUrlController.text,
                                   fit: BoxFit.cover,
@@ -304,12 +304,12 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                       ],
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 30),
-                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      margin: const EdgeInsets.only(top: 30),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: FloatingActionButton(
                         elevation: 10,
                         onPressed: _saveForm,
-                        child: Text(
+                        child: const Text(
                           'Salvar',
                           style: TextStyle(
                               fontSize: 22,

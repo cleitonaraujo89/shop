@@ -1,6 +1,3 @@
-//   https://cdn.pixabay.com/photo/2019/06/30/21/08/balloon-4308798_640.png
-// ignore_for_file: prefer_final_fields
-
 import 'dart:convert';
 import 'dart:math';
 

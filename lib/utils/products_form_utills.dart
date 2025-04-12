@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -75,19 +75,19 @@ Future<void> deleteProduct({
 
       return StatefulBuilder(
         builder: (ctx, setState) => AlertDialog(
-          title: Center(child: Text('Tem Certeza?')),
+          title: const Center(child: Text('Tem Certeza?')),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Deseja excluir este produto ?'),
+              const Text('Deseja excluir este produto ?'),
               loading
-                  ? Center(child: CircularProgressIndicator.adaptive())
-                  : SizedBox(height: 36),
-              SizedBox(
+                  ? const Center(child: CircularProgressIndicator.adaptive())
+                  : const SizedBox(height: 36),
+              const SizedBox(
                 height: 15,
               ),
               Text(productTitle),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               Center(
@@ -108,7 +108,7 @@ Future<void> deleteProduct({
               children: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: Text('Voltar'),
+                  child: const Text('Voltar'),
                 ),
                 TextButton(
                   onPressed: () async {
@@ -121,7 +121,7 @@ Future<void> deleteProduct({
                       setState(() => loading = false);
                       Navigator.of(context).pop();
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
+                        const SnackBar(
                           content: Text(
                             'Produto Removido!',
                             style: TextStyle(fontSize: 18),
@@ -137,7 +137,7 @@ Future<void> deleteProduct({
                           content: 'falha na remoção do item');
                     }
                   },
-                  child: Text('Deletar'),
+                  child: const Text('Deletar'),
                 ),
               ],
             ),

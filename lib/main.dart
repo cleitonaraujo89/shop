@@ -1,5 +1,3 @@
-// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,9 +15,11 @@ import './views/products_management_screen.dart';
 import './views/product_form_screen.dart';
 import './views/auth_home_screen.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -63,15 +63,15 @@ class MyApp extends StatelessWidget {
               secondary: Colors.deepOrange,
             ),
             fontFamily: 'Lato',
-            textTheme: TextTheme(titleLarge: TextStyle())),
+            textTheme: const TextTheme(titleLarge: TextStyle())),
         //home: AuthScreen(),
         routes: {
-          AppRoutes.AUTH_HOME: (ctx) => AuthOrHomeScreen(),
-          AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailScreen(),
-          AppRoutes.CART: (ctx) => CartScreen(),
-          AppRoutes.ORDERS: (ctx) => OrdersScreen(),
-          AppRoutes.PRODUCTS: (ctx) => ProductsManagementScreen(),
-          AppRoutes.PRODUCTS_FORM: (ctx) => ProductFormScreen(),
+          AppRoutes.AUTH_HOME: (ctx) => const AuthOrHomeScreen(),
+          AppRoutes.PRODUCT_DETAIL: (ctx) => const ProductDetailScreen(),
+          AppRoutes.CART: (ctx) => const CartScreen(),
+          AppRoutes.ORDERS: (ctx) => const OrdersScreen(),
+          AppRoutes.PRODUCTS: (ctx) => const ProductsManagementScreen(),
+          AppRoutes.PRODUCTS_FORM: (ctx) => const ProductFormScreen(),
         },
       ),
     );

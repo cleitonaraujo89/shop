@@ -1,4 +1,4 @@
-// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, sort_child_properties_last, use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, sort_child_properties_last
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +16,8 @@ import '../components/alert.dart';
 enum FilterOptions { favorite, all }
 
 class ProductsOverviewScreen extends StatefulWidget {
+  const ProductsOverviewScreen({super.key});
+
   @override
   State<ProductsOverviewScreen> createState() => _ProductsOverviewScreenState();
 }
@@ -45,7 +47,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
       title: 'Minha Loja',
       action: [
         PopupMenuButton(
-          icon: Icon(Icons.more_vert),
+          icon: const Icon(Icons.more_vert),
           onSelected: (FilterOptions selectedValue) {
             setState(() {
               if (selectedValue == FilterOptions.favorite) {
@@ -58,11 +60,11 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
             });
           },
           itemBuilder: (_) => [
-            PopupMenuItem(
+            const PopupMenuItem(
               child: Text('Somente Favoritos'),
               value: FilterOptions.favorite,
             ),
-            PopupMenuItem(
+            const PopupMenuItem(
               child: Text('Todos'),
               value: FilterOptions.all,
             ),
@@ -71,7 +73,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         Consumer<Cart>(
           child: IconButton(
             onPressed: () => Navigator.of(context).pushNamed(AppRoutes.CART),
-            icon: Icon(Icons.shopping_cart),
+            icon: const Icon(Icons.shopping_cart),
           ),
           builder: (_, cart, child) => cart_badge.Badge(
             value: cart.itemsCount.toString(),
@@ -80,9 +82,9 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         ),
       ],
       body: _isLoading
-          ? Center(child: CircularProgressIndicator.adaptive())
+          ? const Center(child: CircularProgressIndicator.adaptive())
           : ProductGrid(showFavoriteOnly: _showFavoriteOnly),
-      drawer: AppDrawer(),
+      drawer: const AppDrawer(),
     );
   }
 }
