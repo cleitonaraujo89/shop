@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop/utils/custom_route.dart';
+import 'package:shop/views/orders_screen.dart';
 import '../providers/auth.dart';
 import '../utils/app_routes.dart';
 
@@ -44,7 +46,9 @@ class AppDrawer extends StatelessWidget {
             ),
             title: const Text('Pedidos'),
             onTap: () {
-              Navigator.of(context).pushNamed(AppRoutes.ORDERS);
+              //transição customizada com FadeTransition
+              Navigator.of(context).pushReplacement(
+                  CustomRoute(builder: (ctx) => const OrdersScreen()));
             },
           ),
           const Divider(
